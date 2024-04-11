@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.domain.Persistable;
@@ -18,6 +19,7 @@ public abstract class BaseEntity implements Persistable<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
+    @JsonIgnore
     @Override
     public boolean isNew() {
         return id==null;
