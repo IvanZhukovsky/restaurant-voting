@@ -22,6 +22,8 @@ public class RestaurantVotingApplication implements ApplicationRunner {
         SpringApplication.run(RestaurantVotingApplication.class, args);
     }
 
+
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 //		userRepository.save(new User("user@gmail.com", "User_First",

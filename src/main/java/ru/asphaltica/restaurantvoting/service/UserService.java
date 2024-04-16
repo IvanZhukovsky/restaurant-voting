@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class UserService {
@@ -24,9 +26,18 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
     @Transactional
-    public void addUser(User user) {
+    public void deleteById(int id){
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }

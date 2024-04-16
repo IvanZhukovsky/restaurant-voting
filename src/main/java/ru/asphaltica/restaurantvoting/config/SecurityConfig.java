@@ -35,9 +35,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("api/restaurants/welcome",
-                                "api/users/**", "api/restaurants/**").permitAll())
-//                        .requestMatchers("api").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers( "/api/restaurants/welcome"
+                                ).permitAll()
+                        .requestMatchers("api/restaurants/**", "api/menus/**").authenticated())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }

@@ -1,6 +1,7 @@
 INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
 VALUES ('user@gmail.com', 'User_First', 'User_Last', 'password'),
-       ('admin@javaops.ru', 'Admin_First', 'Admin_last', 'admin');
+       ('admin@javaops.ru', 'Admin_First', 'Admin_last',
+        '$2a$10$MTMrh7X8UslRu2Dq5srro.d7oBjJQDz7b66xjViVyxsRwh4y0YCb.');
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
        ('ADMIN', 2),
@@ -14,6 +15,26 @@ VALUES (1, 'черный чай с сахаром', 10.5),
        (1, 'суп гороховый', 70.0),
        (1, 'салат мимоза', 30.3),
        (1, 'чай с травами', 60.5);
+
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (1, NOW());
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (1, '2024-04-15 10:00:00');
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (1, NOW());
+
+
+
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (1, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
+VALUES (1, 1),
+       (1, 2),
+       (2, 3),
+       (2, 4);
+
+
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Хинкальная №1');

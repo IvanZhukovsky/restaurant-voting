@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -25,9 +26,11 @@ public class Restaurant {
     @NotEmpty
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ownRestaurant")
     private List<Menu> menus;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ownRestaurant")
     private List<Dish> dishes;
 }

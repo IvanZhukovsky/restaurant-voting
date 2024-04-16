@@ -24,9 +24,6 @@ public class User extends BaseEntity {
     @Size(max = 128)
     private String email;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "first_name")
     @Size(max = 128)
     private String firstName;
