@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.modelmapper.ModelMapper;
@@ -21,5 +22,8 @@ public class AppConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
+    @Bean
+    public ObjectMapper objectMapper() {return new ObjectMapper();}
 
 }

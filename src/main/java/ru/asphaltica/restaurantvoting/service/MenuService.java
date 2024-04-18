@@ -41,9 +41,9 @@ public class MenuService {
     }
 
     @Transactional
-    public void create(int restaurantId) {
-        Restaurant ownRestaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        Menu menu = new Menu();
+    public void create(int restaurantId, Menu menu) {
+        Restaurant ownRestaurant = new Restaurant();
+        ownRestaurant.setId(restaurantId);
         menu.setOwnRestaurant(ownRestaurant);
         menuRepository.save(menu);
     }

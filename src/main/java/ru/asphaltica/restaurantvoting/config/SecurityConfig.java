@@ -35,9 +35,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers( "/api/restaurants/welcome"
-                                ).permitAll()
-                        .requestMatchers("api/restaurants/**", "api/menus/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(
+//                        "api/restaurants/welcome"
+//                        ,"/api/restaurants/**"
+//                                , "/api/admin/users/**"
+//                                , "api/menus/**"
+//                                , "api/dishes/**",
+                                "/api/admin/users/welcome",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                        "/api/account/register"
+                        ).anonymous()//permitAll()
+                        .requestMatchers(
+                                "/api/admin/users/**",
+                                "/api/account/**",
+                                "/api/restaurants/**",
+                                "/api/menus/*/vote",
+                                "/api/users/welcome"
+                        ).authenticated())
+                //.httpBasic()
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }

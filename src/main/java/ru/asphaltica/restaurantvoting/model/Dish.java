@@ -2,15 +2,16 @@ package ru.asphaltica.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "dish")
@@ -23,10 +24,13 @@ public class Dish {
     private int id;
 
     @Column(name = "name")
+    @NotEmpty
+    @Size(max = 128)
     private String name;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "price", nullable = false)
+    @NotNull
+    private Double price;
 
     @JsonIgnore
     @ManyToOne

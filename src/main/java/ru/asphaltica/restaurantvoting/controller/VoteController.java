@@ -1,12 +1,8 @@
 package ru.asphaltica.restaurantvoting.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import ru.asphaltica.restaurantvoting.model.Role;
-import ru.asphaltica.restaurantvoting.model.User;
+import org.springframework.web.bind.annotation.*;
+import ru.asphaltica.restaurantvoting.model.*;
 import ru.asphaltica.restaurantvoting.service.VoteService;
 
 import java.util.Collections;
@@ -26,5 +22,7 @@ public class VoteController {
     public VoteController(VoteService voteService) {
         this.voteService = voteService;
     }
+
+
 
 }

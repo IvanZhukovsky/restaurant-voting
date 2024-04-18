@@ -22,8 +22,8 @@ public class Restaurant {
     private int id;
 
     @Column(name = "name")
-    @Size(max = 128)
-    @NotEmpty
+    @Size(max = 128, message = "the length of the restaurant name should not exceed 128 characters")
+    @NotEmpty(message = "the restaurant name must not be empty")
     private String name;
 
     @JsonIgnore

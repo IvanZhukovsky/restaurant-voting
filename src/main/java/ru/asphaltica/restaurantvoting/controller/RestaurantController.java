@@ -3,87 +3,83 @@ package ru.asphaltica.restaurantvoting.controller;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.asphaltica.restaurantvoting.dto.MenuDTO;
 import ru.asphaltica.restaurantvoting.dto.RestaurantDTO;
+import ru.asphaltica.restaurantvoting.dto.RestaurantsResponce;
+import ru.asphaltica.restaurantvoting.exceptions.EntityException;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
+import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.service.MenuService;
 import ru.asphaltica.restaurantvoting.service.RestaurantService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClient;
+
 @RestController
-@RequestMapping("/api/restaurants")
+@RequestMapping(value = "/api/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
     private final RestaurantService restaurantService;
-    private final MenuService menuService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, MenuService menuService, ModelMapper modelMapper) {
+    public RestaurantController(RestaurantService restaurantService, ModelMapper modelMapper) {
         this.restaurantService = restaurantService;
-        this.menuService = menuService;
         this.modelMapper = modelMapper;
     }
 
 
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "Welcome to the unprotected page";
-    }
-
-    //Получить все рестораны
     @GetMapping
     //@PreAuthorize("hasAuthority('USER')")
-    public List<RestaurantDTO> allRestaurants() {
-        return restaurantService.findAll().stream()
+    public RestaurantsResponce getAll() {
+        return new RestaurantsResponce(restaurantService.findAll().stream()
                 .map(this::convertToRestaurantDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    //Получить ресторан по его id
     @GetMapping("/{id}")
-    public RestaurantDTO findById(@PathVariable int id) {
+    public RestaurantDTO get(@PathVariable int id) {
         return convertToRestaurantDTO(restaurantService.findById(id));
     }
 
-    //Получить все меню ресторана по его id
-    @GetMapping("/{id}/menus")
-    public List<MenuDTO> findAllByOwnRestaurantId(@PathVariable int id){
-        List<Menu> menus = menuService.findAllByOwnRestaurantId(id);
-        List<MenuDTO> menusDTO = menus.stream()
-                .map(this::convertToMenuDTO).collect(Collectors.toList());
-         return menusDTO;
-    }
-
-    //Добавить новый ресторан
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     //@PreAuthorize("hasAuthority('ADMIN')")
-    public String add(@RequestBody @Valid RestaurantDTO restaurantDTO) {
-        restaurantService.save(convertToRestaurant(restaurantDTO));
-        return "Restaurant saved!";
-    }
-
-    //Изменить ресторан
-    @PatchMapping("/{id}")
-    public String updateById(@PathVariable int id, @RequestBody RestaurantDTO restaurantDTO){
-        Restaurant restaurant = restaurantService.findById(id);
-        Restaurant patch = convertToRestaurant(restaurantDTO);
-        if (patch.getName() != null) {
-            restaurant.setName(patch.getName());
+    public ResponseEntity<Restaurant> create(@RequestBody @Valid RestaurantDTO restaurantDTO, BindingResult bindingResult) {
+        Restaurant restaurant = convertToRestaurant(restaurantDTO);
+        if (bindingResult.hasErrors()) {
+            throw new EntityException(returnErrorsToClient(bindingResult));
         }
-        restaurantService.save(restaurant);
-        return "restaurant updated";
+        Restaurant created = restaurantService.save(restaurant);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/restaurants/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
-
 
     @DeleteMapping("/{id}")
     public String deleteById(@PathVariable int id) {
         restaurantService.delete(id);
         return "Ресторан № " + id + " удален";
+    }
+
+    @PutMapping("/{id}")
+
+    public String update(@PathVariable int id, @RequestBody RestaurantDTO restaurantDTO){
+        if (!restaurantService.existById(id)) {
+            return "No such row";
+        }
+        restaurantService.save(convertToRestaurant(restaurantDTO));
+        return "Restaurant updated";
     }
 
     private Restaurant convertToRestaurant(RestaurantDTO restaurantDTO) {
@@ -93,10 +89,4 @@ public class RestaurantController {
     private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
         return modelMapper.map(restaurant, RestaurantDTO.class);
     }
-
-    private MenuDTO convertToMenuDTO(Menu menu) {
-        return modelMapper.map(menu, MenuDTO.class);
-    }
-
-
 }
