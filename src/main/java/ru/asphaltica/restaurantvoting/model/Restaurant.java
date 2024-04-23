@@ -1,6 +1,8 @@
 package ru.asphaltica.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -21,16 +23,20 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     @Size(max = 128, message = "the length of the restaurant name should not exceed 128 characters")
     @NotEmpty(message = "the restaurant name must not be empty")
     private String name;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToMany(mappedBy = "ownRestaurant")
     private List<Menu> menus;
 
     @JsonIgnore
     @OneToMany(mappedBy = "ownRestaurant")
     private List<Dish> dishes;
+
+    public Restaurant(String name) {
+    }
 }

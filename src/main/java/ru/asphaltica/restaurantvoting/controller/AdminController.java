@@ -15,13 +15,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.asphaltica.restaurantvoting.dto.UserDTO;
-import ru.asphaltica.restaurantvoting.dto.UsersResponse;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.service.UserService;
 import ru.asphaltica.restaurantvoting.util.UserValidator;
 
 import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClient;
@@ -50,11 +50,11 @@ public class AdminController {
     }
 
     @GetMapping
-    public UsersResponse getAll() {
-        return new UsersResponse(userService.findAll()
+    public List<UserDTO> getAll() {
+        return userService.findAll()
                 .stream()
                 .map(this::convertToUserDTO)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

@@ -33,14 +33,20 @@ public class RestaurantService {
     }
 
     @Transactional
+    public Restaurant update(int id, Restaurant restaurant) {
+        checkExistById(id);
+        restaurant.setId(id);
+        return restaurantRepository.save(restaurant);
+    }
+
+    @Transactional
     public void delete(int id) {
+        checkExistById(id);
         restaurantRepository.deleteById(id);
     }
 
-    public boolean existById(int id) {
-        return restaurantRepository.existsById(id);
+    private void checkExistById(int id) {
+        if (!restaurantRepository.existsById(id)) throw new EntityNotFoundException("Restaurant with this id wasn't found");
     }
-
-
 
 }

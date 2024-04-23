@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class DateTimeUtil {
 
-    private static final int END_VOTING_HOURS = 11;
+    private static final int END_VOTING_HOURS = 16;
     private static final int END_VOTING_MINUTES = 0;
 
     private DateTimeUtil() {

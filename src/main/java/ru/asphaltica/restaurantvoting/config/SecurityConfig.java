@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,25 +36,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers(
-//                        "api/restaurants/welcome"
-//                        ,"/api/restaurants/**"
-//                                , "/api/admin/users/**"
-//                                , "api/menus/**"
-//                                , "api/dishes/**",
-                                "/api/admin/users/welcome",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                        "/api/account/register"
-                        ).anonymous()//permitAll()
-                        .requestMatchers(
-                                "/api/admin/users/**",
-                                "/api/account/**",
-                                "/api/restaurants/**",
-                                "/api/menus/*/vote",
-                                "/api/users/welcome"
-                        ).authenticated())
-                //.httpBasic()
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(
+                                        "/api/admin/users/welcome",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/api/account/register"
+                                ).anonymous()
+                                .requestMatchers(
+                                        "/api/restaurants/available",
+                                        "/api/account/**",
+                                        "/api/restaurants/{id}/vote",
+                                        "/api/votes/voting_result"
+                                ).hasAuthority("USER")
+                                .requestMatchers(
+                                        "/api/admin/users/**",
+                                        "/api/restaurants/**",
+                                        "/api/dishes/**",
+                                        "/api/menus/**").hasAuthority("ADMIN")
+                )
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
