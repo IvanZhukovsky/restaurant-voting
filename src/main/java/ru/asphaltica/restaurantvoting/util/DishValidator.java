@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.asphaltica.restaurantvoting.model.Dish;
-import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.DishRepository;
-import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 
 @Component
 public class DishValidator implements Validator {

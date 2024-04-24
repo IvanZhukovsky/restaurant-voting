@@ -6,7 +6,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
-import ru.asphaltica.restaurantvoting.service.RestaurantService;
 
 @Component
 public class RestaurantValidator implements Validator {

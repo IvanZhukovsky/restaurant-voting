@@ -1,5 +1,7 @@
 package ru.asphaltica.restaurantvoting.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,8 @@ import java.util.Set;
 
 import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClient;
 
+@Tag(name = "Контроллер аккаунта", description = "Контроллер позволяет пользователю " +
+        "совершать основные операции над аккаунтом, в том числе регистрироваться")
 @RestController
 @RequestMapping(value = "/api/account", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -40,12 +44,20 @@ public class AccountController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(
+            summary = "Получение пользователя",
+            description = "Позволяет пользователю получить данные о своем аккаунте"
+    )
     @GetMapping
     public User get(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("get {}", userDetails.getUsername());
         return userService.findByMail(userDetails.getUsername());
     }
 
+    @Operation(
+            summary = "Удаление пользователя",
+            description = "Позволяет пользователю удалить свой аккаунт"
+    )
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal UserDetails userDetails) {
@@ -53,6 +65,10 @@ public class AccountController {
         userService.deleteByMail(userDetails.getUsername());
     }
 
+    @Operation(
+            summary = "Регистрация пользователя",
+            description = "Позволяет пользователю зарегистрировать свой аккаунт"
+    )
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
@@ -69,6 +85,11 @@ public class AccountController {
                 .build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
+
+    @Operation(
+            summary = "Обновление пользователя",
+            description = "Позволяет пользователю обновить данные своего аккаунта"
+    )
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserDTO userDTO, @AuthenticationPrincipal UserDetails userDetails) {

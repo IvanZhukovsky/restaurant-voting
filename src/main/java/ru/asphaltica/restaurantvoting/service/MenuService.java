@@ -2,6 +2,7 @@ package ru.asphaltica.restaurantvoting.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.dto.DishDTO;
@@ -11,7 +12,6 @@ import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.MenuRepository;
-import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 import ru.asphaltica.restaurantvoting.util.DateTimeUtil;
 
 import java.util.List;
@@ -22,21 +22,19 @@ import java.util.stream.Collectors;
 public class MenuService {
 
     private final MenuRepository menuRepository;
-    private final RestaurantRepository restaurantRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public MenuService(MenuRepository menuRepository, RestaurantRepository restaurantRepository, ModelMapper modelMapper) {
+    public MenuService(MenuRepository menuRepository, ModelMapper modelMapper) {
         this.menuRepository = menuRepository;
-        this.restaurantRepository = restaurantRepository;
         this.modelMapper = modelMapper;
     }
 
     public List<Menu> findAll(){
-        List<Menu> menus = menuRepository.findAll();
         return menuRepository.findAll();
     }
 
+    @Cacheable(value = "MenusAvailable", unless = "#result == null")
     public List<Menu> findAllTodayAvailable(){
         return menuRepository.findByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting());
     }

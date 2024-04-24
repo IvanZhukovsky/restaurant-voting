@@ -15,6 +15,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .servers(
                         List.of(new Server().url("http://localhost:8080")))
-                .info(new Info().title("Restaurant-Voting"));
+                .info(new Info()
+                        .title("Restaurant-Voting")
+                        .version("1.0.0"));
     }
 }

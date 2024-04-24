@@ -5,7 +5,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.asphaltica.restaurantvoting.model.User;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
