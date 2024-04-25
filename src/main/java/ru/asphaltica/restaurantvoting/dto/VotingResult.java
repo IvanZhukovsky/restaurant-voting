@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VotingResult {
 
-    private RestaurantDTO restaurantDTO;
+    private RestaurantDto restaurantDTO;
     private int voteCount;
 }

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,9 +12,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.dto.MenuDTO;
-import ru.asphaltica.restaurantvoting.dto.RestaurantDTO;
+import ru.asphaltica.restaurantvoting.dto.MenuDto;
+import ru.asphaltica.restaurantvoting.dto.RestaurantDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
+import ru.asphaltica.restaurantvoting.mapper.MenuMapper;
+import ru.asphaltica.restaurantvoting.mapper.RestaurantMapper;
 import ru.asphaltica.restaurantvoting.model.*;
 import ru.asphaltica.restaurantvoting.service.MenuService;
 import ru.asphaltica.restaurantvoting.service.RestaurantService;
@@ -39,16 +40,15 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final UserService userService;
     private final MenuService menuService;
-    private final ModelMapper modelMapper;
     private final VoteService voteService;
     private final RestaurantValidator restaurantValidator;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, UserService userService, MenuService menuService, ModelMapper modelMapper, VoteService voteService, RestaurantValidator restaurantValidator) {
+    public RestaurantController(RestaurantService restaurantService, UserService userService, MenuService menuService,
+                                VoteService voteService, RestaurantValidator restaurantValidator) {
         this.restaurantService = restaurantService;
         this.userService = userService;
         this.menuService = menuService;
-        this.modelMapper = modelMapper;
         this.voteService = voteService;
         this.restaurantValidator = restaurantValidator;
     }
@@ -58,10 +58,10 @@ public class RestaurantController {
             description = "Позволяет администратору получить перечень всех ресторанов"
     )
     @GetMapping
-    public List<RestaurantDTO> getAll() {
+    public List<RestaurantDto> getAll() {
         log.info("get all restaurants");
         return restaurantService.findAll().stream()
-                .map(this::convertToRestaurantDTO)
+                .map(RestaurantMapper::convertToRestaurantDTO)
                 .collect(toList());
     }
 
@@ -70,9 +70,9 @@ public class RestaurantController {
             description = "Позволяет администратору получить данные о ресторане по его id"
     )
     @GetMapping("/{id}")
-    public RestaurantDTO get(@PathVariable int id) {
+    public RestaurantDto get(@PathVariable int id) {
         log.info("get restaurant with id = {}", id);
-        return convertToRestaurantDTO(restaurantService.findById(id));
+        return RestaurantMapper.convertToRestaurantDTO(restaurantService.findById(id));
     }
 
     @Operation(
@@ -80,9 +80,9 @@ public class RestaurantController {
             description = "Позволяет администратору создать новый ресторан"
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> create(@RequestBody @Valid RestaurantDTO restaurantDTO, BindingResult bindingResult) {
+    public ResponseEntity<Restaurant> create(@RequestBody @Valid RestaurantDto restaurantDTO, BindingResult bindingResult) {
         log.info("create new restaurant");
-        Restaurant restaurant = convertToRestaurant(restaurantDTO);
+        Restaurant restaurant = RestaurantMapper.convertToRestaurant(restaurantDTO);
         restaurantValidator.validate(restaurant, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new EntityException(returnErrorsToClient(bindingResult));
@@ -110,9 +110,9 @@ public class RestaurantController {
     )
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @RequestBody RestaurantDTO restaurantDTO){
+    public void update(@PathVariable int id, @RequestBody RestaurantDto restaurantDTO){
         log.info("Updating restaurant with id = {}", id);
-        restaurantService.update(id, convertToRestaurant(restaurantDTO));
+        restaurantService.update(id, RestaurantMapper.convertToRestaurant(restaurantDTO));
     }
 
     @Operation(
@@ -140,23 +140,11 @@ public class RestaurantController {
     @GetMapping("/available")
     public List<Restaurant> findAllTodayAvailable() {
         log.info("Getting a list of restaurants available for voting");
-        List<MenuDTO> menuDTOS = menuService.findAllTodayAvailable().stream().map(MenuDTO::convertToMenuDTO).collect(Collectors.toList());
-        return menuDTOS.stream().map(menuDTO -> {
-            Restaurant restaurant = convertToRestaurant(menuDTO.getOwnRestaurant());
-            restaurant.setMenus(List.of(MenuDTO.converToMenu(menuDTO)));
+        List<MenuDto> menuDtos = menuService.findAllTodayAvailable().stream().map(MenuMapper::convertToMenuDTO).collect(Collectors.toList());
+        return menuDtos.stream().map(menuDto -> {
+            Restaurant restaurant = RestaurantMapper.convertToRestaurant(menuDto.getOwnRestaurant());
+            restaurant.setMenus(List.of(MenuMapper.converToMenu(menuDto)));
             return restaurant;
         }).collect(toList());
     }
-
-    private Restaurant convertToRestaurant(RestaurantDTO restaurantDTO) {
-        return modelMapper.map(restaurantDTO, Restaurant.class);
-    }
-
-    private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
-        return modelMapper.map(restaurant, RestaurantDTO.class);
-    }
-
-
-
-
 }

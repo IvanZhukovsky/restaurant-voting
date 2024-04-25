@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.dto.RestaurantDTO;
+import ru.asphaltica.restaurantvoting.dto.RestaurantDto;
 import ru.asphaltica.restaurantvoting.dto.VotingResult;
 import ru.asphaltica.restaurantvoting.model.*;
 import ru.asphaltica.restaurantvoting.service.MenuService;
@@ -41,7 +41,7 @@ public class VoteController {
         List<Menu> menusAvailableToday = menuService.findAllTodayAvailable();
         return menusAvailableToday.stream().map(menu -> {
             VotingResult votingResult = new VotingResult();
-            votingResult.setRestaurantDTO(RestaurantDTO.convertToRestaurantDTO(menu.getOwnRestaurant()));
+            votingResult.setRestaurantDTO(RestaurantDto.convertToRestaurantDTO(menu.getOwnRestaurant()));
             votingResult.setVoteCount(voteService.countByMenu(menu));
             return votingResult;
         }).collect(Collectors.toList());

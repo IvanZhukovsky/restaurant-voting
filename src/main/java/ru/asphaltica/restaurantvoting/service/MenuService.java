@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.asphaltica.restaurantvoting.dto.DishDTO;
-import ru.asphaltica.restaurantvoting.dto.MenuDTO;
-import ru.asphaltica.restaurantvoting.dto.RestaurantDTO;
+import ru.asphaltica.restaurantvoting.dto.DishDto;
+import ru.asphaltica.restaurantvoting.dto.MenuDto;
+import ru.asphaltica.restaurantvoting.dto.RestaurantDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
@@ -58,7 +58,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDTO create(Menu menu) {
+    public MenuDto create(Menu menu) {
         return convertToMenuDTO(menuRepository.save(menu));
     }
 
@@ -75,13 +75,13 @@ public class MenuService {
         menuRepository.save(menu);
     }
 
-    private MenuDTO convertToMenuDTO(Menu menu) {
-        MenuDTO menuDTO = new MenuDTO();
+    private MenuDto convertToMenuDTO(Menu menu) {
+        MenuDto menuDTO = new MenuDto();
         menuDTO.setId(menu.getId());
         menuDTO.setCreateDate(menu.getCreateDate());
-        RestaurantDTO restaurantDTO = modelMapper.map(menu.getOwnRestaurant(), RestaurantDTO.class);
+        RestaurantDto restaurantDTO = modelMapper.map(menu.getOwnRestaurant(), RestaurantDto.class);
         menuDTO.setOwnRestaurant(restaurantDTO);
-        List<DishDTO> dishes = menu.getDishes().stream().map(dish -> modelMapper.map(dish, DishDTO.class)).collect(Collectors.toList());
+        List<DishDto> dishes = menu.getDishes().stream().map(dish -> modelMapper.map(dish, DishDto.class)).collect(Collectors.toList());
         menuDTO.setDishes(dishes);
         return menuDTO;
     }

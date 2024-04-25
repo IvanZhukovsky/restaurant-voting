@@ -14,8 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.asphaltica.restaurantvoting.dto.UserDTO;
+import ru.asphaltica.restaurantvoting.dto.UserDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
+import ru.asphaltica.restaurantvoting.mapper.UserMapper;
 import ru.asphaltica.restaurantvoting.model.Role;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.service.UserService;
@@ -71,9 +72,9 @@ public class AccountController {
     )
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDTO, BindingResult bindingResult) {
         log.info("register {}", userDTO);
-        User user = convertToUser(userDTO);
+        User user = UserMapper.convertToUser(userDTO);
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new EntityException(returnErrorsToClient(bindingResult));
@@ -92,9 +93,9 @@ public class AccountController {
     )
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody UserDTO userDTO, @AuthenticationPrincipal UserDetails userDetails) {
+    public void update(@Valid @RequestBody UserDto userDTO, @AuthenticationPrincipal UserDetails userDetails) {
         User oldUser = userService.findByMail(userDetails.getUsername());
-        User newUser = convertToUser(userDTO);
+        User newUser = UserMapper.convertToUser(userDTO);
         log.info("update {} to {}", oldUser, newUser);
         newUser.setId(oldUser.getId());
         newUser.setRoles(oldUser.getRoles());
@@ -104,11 +105,5 @@ public class AccountController {
         } else {
             userService.create(newUser);
         }
-
     }
-
-    private User convertToUser(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
-    }
-
 }

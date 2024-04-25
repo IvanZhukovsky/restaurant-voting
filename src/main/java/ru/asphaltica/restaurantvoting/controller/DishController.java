@@ -11,8 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.dto.DishDTO;
+import ru.asphaltica.restaurantvoting.dto.DishDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
+import ru.asphaltica.restaurantvoting.mapper.DishMapper;
 import ru.asphaltica.restaurantvoting.model.Dish;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.service.DishService;
@@ -32,14 +33,12 @@ import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClien
 public class DishController {
 
     private final DishService dishService;
-    private final ModelMapper modelMapper;
     private final DishValidator dishValidator;
 
 
     @Autowired
-    public DishController(DishService dishService, ModelMapper modelMapper, DishValidator dishValidator) {
+    public DishController(DishService dishService, DishValidator dishValidator) {
         this.dishService = dishService;
-        this.modelMapper = modelMapper;
         this.dishValidator = dishValidator;
     }
 
@@ -49,9 +48,9 @@ public class DishController {
                     "которому оно принадлежит"
     )
     @GetMapping
-    public List<DishDTO> getAll() {
+    public List<DishDto> getAll() {
         log.info("get all dishes");
-        return dishService.findAll().stream().map(DishDTO::convertToDishDTO).collect(Collectors.toList());
+        return dishService.findAll().stream().map(DishDto::convertToDishDTO).collect(Collectors.toList());
     }
 
     @Operation(
@@ -59,9 +58,9 @@ public class DishController {
             description = "Позволяет администратору получить информацию о блюде по его id"
     )
     @GetMapping("/{id}")
-    public DishDTO get(@PathVariable int id) {
+    public DishDto get(@PathVariable int id) {
         log.info("get dish with id = {}", id);
-        return DishDTO.convertToDishDTO(dishService.findById(id));
+        return DishDto.convertToDishDTO(dishService.findById(id));
     }
 
     @Operation(
@@ -80,10 +79,10 @@ public class DishController {
                     "в качестве параметра id, "
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> create(@RequestBody @Valid DishDTO dishDTO,
+    public ResponseEntity<Dish> create(@RequestBody @Valid DishDto dishDTO,
                                        @RequestParam int restaurantId, BindingResult bindingResult) {
         log.info("create new dish");
-        Dish dish = convertToDish(dishDTO);
+        Dish dish = DishMapper.convertToDish(dishDTO);
         Restaurant ownRestaurant = new Restaurant();
         ownRestaurant.setId(restaurantId);
         dish.setOwnRestaurant(ownRestaurant);
@@ -114,15 +113,12 @@ public class DishController {
     )
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody DishDTO dishDTO, @PathVariable int id){
+    public void update(@RequestBody DishDto dishDTO, @PathVariable int id){
         log.info("Updating dish with id = {}", id);
-        Dish dish = convertToDish(dishDTO);
+        Dish dish = DishMapper.convertToDish(dishDTO);
         dish.setId(id);
         dishService.update(dish);
     }
 
-    private Dish convertToDish(DishDTO dishDTO) {
-        return modelMapper.map(dishDTO, Dish.class);
-    }
 
 }

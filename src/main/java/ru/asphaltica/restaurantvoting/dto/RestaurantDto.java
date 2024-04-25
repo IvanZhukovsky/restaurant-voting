@@ -9,7 +9,7 @@ import ru.asphaltica.restaurantvoting.model.Restaurant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantDTO {
+public class RestaurantDto {
 
     private int id;
     @NotEmpty
@@ -17,12 +17,12 @@ public class RestaurantDTO {
 
     private static  ModelMapper modelMapper = new ModelMapper();
 
-    public static Restaurant convertToRestaurant(RestaurantDTO restaurantDTO) {
+    public static Restaurant convertToRestaurant(RestaurantDto restaurantDTO) {
         return modelMapper.map(restaurantDTO, Restaurant.class);
     }
 
-    public static RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
-        return modelMapper.map(restaurant, RestaurantDTO.class);
+    public static RestaurantDto convertToRestaurantDTO(Restaurant restaurant) {
+        return modelMapper.map(restaurant, RestaurantDto.class);
     }
 
 

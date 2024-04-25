@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class UserDTO {
+public class UserDto {
 
     @Email(message = "format must match email address")
     @NotEmpty(message = "email address must be specified")

@@ -9,8 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.dto.MenuDTO;
+import ru.asphaltica.restaurantvoting.dto.MenuDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
+import ru.asphaltica.restaurantvoting.mapper.MenuMapper;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.service.*;
 import ru.asphaltica.restaurantvoting.util.ErrorsUtil;
@@ -41,18 +42,18 @@ public class MenuController {
             description = "Позволяет администратору получить полный перечень всех, когда либо созданных меню"
     )
     @GetMapping()
-    public List<MenuDTO> getAll() {
+    public List<MenuDto> getAll() {
         log.info("get all menus");
         List<Menu> menus = menuService.findAll();
-        return menus.stream().map(MenuDTO::convertToMenuDTO).collect(Collectors.toList());
+        return menus.stream().map(MenuMapper::convertToMenuDTO).collect(Collectors.toList());
     }
     @Operation(
             summary = "Получение меню",
             description = "Позволяет администратору получить меню по его id"
     )
     @GetMapping("/{id}")
-    public MenuDTO get(@PathVariable int id) {
-        return MenuDTO.convertToMenuDTO(menuService.findById(id));
+    public MenuDto get(@PathVariable int id) {
+        return MenuMapper.convertToMenuDTO(menuService.findById(id));
     }
 
     @Operation(
@@ -60,11 +61,11 @@ public class MenuController {
             description = "Позволяет администратору получить перечень всех меню, созданных для ресторана с указанным id"
     )
     @GetMapping("/restaurant/{restaurantId}")
-    public List<MenuDTO> findAllByOwnRestaurantId(@PathVariable int restaurantId) {
+    public List<MenuDto> findAllByOwnRestaurantId(@PathVariable int restaurantId) {
         log.info("get all menus in restaurant with id = {}", restaurantId);
         List<Menu> menus = menuService.findAllByOwnRestaurantId(restaurantId);
         return menus.stream()
-                .map(MenuDTO::convertToMenuDTO).collect(Collectors.toList());
+                .map(MenuMapper::convertToMenuDTO).collect(Collectors.toList());
     }
 
     @Operation(
@@ -72,9 +73,9 @@ public class MenuController {
             description = "Позволяет администратору получить перечень всех меню созданных в текущий день"
     )
     @GetMapping("/today")
-    public List<MenuDTO> findAllTodayAvailable() {
+    public List<MenuDto> findAllTodayAvailable() {
         log.info("get menus available today");
-        return menuService.findAllTodayAvailable().stream().map(MenuDTO::convertToMenuDTO).collect(Collectors.toList());
+        return menuService.findAllTodayAvailable().stream().map(MenuMapper::convertToMenuDTO).collect(Collectors.toList());
     }
 
     @Operation(
@@ -82,7 +83,7 @@ public class MenuController {
             description = "Позволяет администратору создать новое меню"
     )
     @PostMapping
-    public ResponseEntity<MenuDTO> create(@Valid @RequestBody Menu menu, BindingResult bindingResult)
+    public ResponseEntity<MenuDto> create(@Valid @RequestBody Menu menu, BindingResult bindingResult)
     {
         log.info("create new menu");
         menuValidator.validate(menu, bindingResult);
@@ -90,7 +91,7 @@ public class MenuController {
             throw new EntityException(ErrorsUtil.returnErrorsToClient(bindingResult));
         }
         log.info("Validation of new menu data passed");
-        MenuDTO created = menuService.create(menu);
+        MenuDto created = menuService.create(menu);
         log.info("A menu has been created with id = {}", created.getId());
         return ResponseEntity.created(URIUtil.getCreatedUri("api/menus/{id}", created.getId())).body(created);
     }

@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,8 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.asphaltica.restaurantvoting.dto.UserDTO;
+import ru.asphaltica.restaurantvoting.dto.UserDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
+import ru.asphaltica.restaurantvoting.mapper.UserMapper;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.service.UserService;
 import ru.asphaltica.restaurantvoting.util.UserValidator;
@@ -37,13 +37,11 @@ public class AdminController {
     public static final String REST_URL = "/api/admin/users";
     private final UserService userService;
     private final UserValidator userValidator;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public AdminController(UserService userService, UserValidator userValidator, ModelMapper modelMapper) {
+    public AdminController(UserService userService, UserValidator userValidator) {
         this.userService = userService;
         this.userValidator = userValidator;
-        this.modelMapper = modelMapper;
     }
 
     @Operation(
@@ -51,11 +49,11 @@ public class AdminController {
             description = "Позволяет администратору получить перечень всех зарегистрированных пользователей"
     )
     @GetMapping
-    public List<UserDTO> getAll() {
+    public List<UserDto> getAll() {
         log.info("get all Users");
         return userService.findAll()
                 .stream()
-                .map(this::convertToUserDTO)
+                .map(UserMapper::convertToUserDTO)
                 .collect(Collectors.toList());
     }
 
@@ -73,9 +71,9 @@ public class AdminController {
             description = "Позволяет администратору зарегистрировать пользователя на основе его данных"
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<User> create(@Valid @RequestBody UserDto userDTO, BindingResult bindingResult) {
         log.info("create new user");
-        User user = convertToUser(userDTO);
+        User user = UserMapper.convertToUser(userDTO);
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
              throw new EntityException(returnErrorsToClient(bindingResult));
@@ -106,9 +104,9 @@ public class AdminController {
     )
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody UserDTO userDTO, @PathVariable int id, BindingResult bindingResult){
+    public void update(@Valid @RequestBody UserDto userDTO, @PathVariable int id, BindingResult bindingResult){
         log.info("Updating user with id = {}", id);
-        User user = convertToUser(userDTO);
+        User user = UserMapper.convertToUser(userDTO);
         if (bindingResult.hasErrors()) {
             throw new EntityException(returnErrorsToClient(bindingResult));
         }
@@ -121,16 +119,10 @@ public class AdminController {
     )
     @Validated
     @GetMapping("/by")
-    public UserDTO getByMail (@RequestParam @Email @NotBlank String email) {
+    public UserDto getByMail (@RequestParam @Email @NotBlank String email) {
         log.info("Get a user from email : {}", email);
-        return convertToUserDTO(userService.findByMail(email));
+        return UserMapper.convertToUserDTO(userService.findByMail(email));
     }
 
-    private User convertToUser(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
-    }
 
-    private UserDTO convertToUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
-    }
 }
