@@ -36,13 +36,11 @@ public class AccountController {
 
     private final UserService userService;
     private final UserValidator userValidator;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public AccountController(UserService userService, UserValidator userValidator, ModelMapper modelMapper) {
+    public AccountController(UserService userService, UserValidator userValidator) {
         this.userService = userService;
         this.userValidator = userValidator;
-        this.modelMapper = modelMapper;
     }
 
     @Operation(
@@ -99,11 +97,6 @@ public class AccountController {
         log.info("update {} to {}", oldUser, newUser);
         newUser.setId(oldUser.getId());
         newUser.setRoles(oldUser.getRoles());
-        if (newUser.getPassword() == null) {
-            newUser.setPassword(oldUser.getPassword());
-            userService.save(newUser);
-        } else {
-            userService.create(newUser);
-        }
+        userService.update(newUser);
     }
 }

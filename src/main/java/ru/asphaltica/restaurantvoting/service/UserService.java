@@ -55,9 +55,14 @@ public class UserService {
     }
 
     @Transactional
-    public void update(User user) {
-        findById(user.getId());
-        userRepository.save(user);
+    public void update(User newUser) {
+        User oldUser = findById(newUser.getId());
+        if (newUser.getPassword() == null) {
+            newUser.setPassword(oldUser.getPassword());
+        } else {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        }
+        userRepository.save(newUser);
     }
 
     public User findByMail(String email) {

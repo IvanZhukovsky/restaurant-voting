@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.asphaltica.restaurantvoting.service.MyUsersDetailsService;
@@ -21,8 +21,6 @@ import static org.springframework.security.config.Customizer.*;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final MyUsersDetailsService myUsersDetailsService;
 
@@ -37,10 +35,10 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
-                                        "/swagger-ui.html"
-                                ).permitAll()
-                                .requestMatchers("/api/account/register",
+                                        "/swagger-ui.html",
                                         "/api/votes/voting_result"
+                                ).permitAll()
+                                .requestMatchers("/api/account/register"
                                 ).anonymous()
                                 .requestMatchers(
                                         "/api/restaurants/available",
@@ -69,6 +67,6 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return PASSWORD_ENCODER;
+        return new BCryptPasswordEncoder();
     }
 }
