@@ -5,13 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.asphaltica.restaurantvoting.service.MyUsersDetailsService;
@@ -23,6 +22,7 @@ import static org.springframework.security.config.Customizer.*;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final MyUsersDetailsService myUsersDetailsService;
 
@@ -33,19 +33,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.securityMatcher("/api/**")
-                .authorizeHttpRequests(auth -> auth
+        return http.authorizeHttpRequests(auth -> auth
                                 .requestMatchers(
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html"
                                 ).permitAll()
-                                .requestMatchers("/api/account/register").anonymous()
+                                .requestMatchers("/api/account/register",
+                                        "/api/votes/voting_result"
+                                ).anonymous()
                                 .requestMatchers(
                                         "/api/restaurants/available",
                                         "/api/account/**",
-                                        "/api/restaurants/{id}/vote",
-                                        "/api/votes/voting_result"
+                                        "/api/restaurants/{id}/vote"
                                 ).hasAuthority("USER")
                                 .requestMatchers(
                                         "/api/admin/users/**",
@@ -68,7 +68,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder() {
+        return PASSWORD_ENCODER;
     }
 }

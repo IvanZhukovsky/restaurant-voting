@@ -1,7 +1,7 @@
 INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
-VALUES ('user@gmail.com', 'User_First', 'User_Last', '$2a$10$MTMrh7X8UslRu2Dq5srro.d7oBjJQDz7b66xjViVyxsRwh4y0YCb.'),
+VALUES ('user@gmail.com', 'User_First', 'User_Last', '{bcrypt}$2a$10$TG8ZznZ1srJZa6Vegvq/XuKdcdrslMHALOxDzY20wbpWOvl.YReoy'),
        ('admin@javaops.ru', 'Admin_First', 'Admin_last',
-        '$2a$10$MTMrh7X8UslRu2Dq5srro.d7oBjJQDz7b66xjViVyxsRwh4y0YCb.');
+        '{bcrypt}$2a$10$MTMrh7X8UslRu2Dq5srro.d7oBjJQDz7b66xjViVyxsRwh4y0YCb.');
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
        ('ADMIN', 2),
@@ -18,21 +18,11 @@ VALUES (1, 'черный чай с сахаром', 10.5),
 
 INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
 VALUES (1, NOW());
-INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
-VALUES (1, '2024-04-16 10:00:00');
-
-
-
-
-
 
 INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
 VALUES (1, 1),
        (1, 2),
-       (2, 3),
-       (2, 4);
-
-
+       (1, 3);
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Хинкальная №1');
@@ -43,6 +33,14 @@ VALUES (2, 'хинкали с бараниной', 300.8),
        (2, 'соус хачапури', 100.0),
        (2, 'капучино', 100.25),
        (2, 'торт', 78.55);
+
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (2, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
+VALUES (2, 5),
+       (2, 6),
+       (2, 8);
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('KFC');
@@ -55,6 +53,14 @@ VALUES (3, 'острые крылья', 170.5),
        (3, 'картофель по деревенски', 120.0),
        (3, 'сырный соус', 88.0);
 
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (3, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
+VALUES (3, 10),
+       (3, 11),
+       (3, 12);
+
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Панорама');
 
@@ -64,6 +70,15 @@ VALUES (4, 'виски', 100.0),
        (4, 'перечный соус', 250.0),
        (4, 'овощи гриль', 450.0),
        (4, 'острый соус', 88.0);
+
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (4, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
+VALUES (4, 17),
+       (4, 18),
+       (4, 16);
+
 
 INSERT INTO RESTAURANT (NAME)
 VALUES ('Пельменная');
@@ -75,11 +90,13 @@ VALUES (5, 'компот из сухофруктов', 50.0),
        (5, 'соус томатный', 20.0);
 
 
+INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
+VALUES (5, NOW());
 
-INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
-VALUES (2, NOW());
-INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)
-VALUES (3, NOW());
+INSERT INTO MENU_DISH (MENU_ID, DISH_ID)
+VALUES (5, 21),
+       (5, 22),
+       (5, 24);
 
 
 
