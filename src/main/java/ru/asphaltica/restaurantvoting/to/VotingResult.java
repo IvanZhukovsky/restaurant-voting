@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.dto;
+package ru.asphaltica.restaurantvoting.to;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

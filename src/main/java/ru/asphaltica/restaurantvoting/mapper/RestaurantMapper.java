@@ -1,7 +1,7 @@
 package ru.asphaltica.restaurantvoting.mapper;
 
 import org.modelmapper.ModelMapper;
-import ru.asphaltica.restaurantvoting.dto.RestaurantDto;
+import ru.asphaltica.restaurantvoting.to.RestaurantDto;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 
 public class RestaurantMapper {

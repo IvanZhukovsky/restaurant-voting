@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.dto;
+package ru.asphaltica.restaurantvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -7,14 +7,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
-import ru.asphaltica.restaurantvoting.model.Dish;
-import ru.asphaltica.restaurantvoting.model.Menu;
-import ru.asphaltica.restaurantvoting.model.Restaurant;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter

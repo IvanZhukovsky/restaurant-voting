@@ -9,13 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.dto.MenuDto;
+import ru.asphaltica.restaurantvoting.to.MenuDto;
 import ru.asphaltica.restaurantvoting.exceptions.EntityException;
 import ru.asphaltica.restaurantvoting.mapper.MenuMapper;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.service.*;
 import ru.asphaltica.restaurantvoting.util.ErrorsUtil;
-import ru.asphaltica.restaurantvoting.util.MenuValidator;
+import ru.asphaltica.restaurantvoting.validation.MenuValidator;
 import ru.asphaltica.restaurantvoting.util.URIUtil;
 
 import java.util.List;

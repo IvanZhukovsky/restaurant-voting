@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.asphaltica.restaurantvoting.service.MyUsersDetailsService;
 
+import static org.springframework.security.config.Customizer.*;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -31,13 +33,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        return http.securityMatcher("/api/**")
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
-                                        "/api/account/register"
-                                ).anonymous()
+                                        "/swagger-ui.html"
+                                ).permitAll()
+                                .requestMatchers("/api/account/register").anonymous()
                                 .requestMatchers(
                                         "/api/restaurants/available",
                                         "/api/account/**",
@@ -50,8 +53,9 @@ public class SecurityConfig {
                                         "/api/dishes/**",
                                         "/api/menus/**").hasAuthority("ADMIN")
                 )
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(withDefaults())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 

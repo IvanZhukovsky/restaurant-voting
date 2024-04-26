@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.dto;
+package ru.asphaltica.restaurantvoting.to;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;

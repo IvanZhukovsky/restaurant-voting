@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.dto;
+package ru.asphaltica.restaurantvoting.to;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

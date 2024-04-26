@@ -1,9 +1,9 @@
 package ru.asphaltica.restaurantvoting.mapper;
 
 import org.modelmapper.ModelMapper;
-import ru.asphaltica.restaurantvoting.dto.DishDto;
-import ru.asphaltica.restaurantvoting.dto.MenuDto;
-import ru.asphaltica.restaurantvoting.dto.RestaurantDto;
+import ru.asphaltica.restaurantvoting.to.DishDto;
+import ru.asphaltica.restaurantvoting.to.MenuDto;
+import ru.asphaltica.restaurantvoting.to.RestaurantDto;
 import ru.asphaltica.restaurantvoting.model.Dish;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
