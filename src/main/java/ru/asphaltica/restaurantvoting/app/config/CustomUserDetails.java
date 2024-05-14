@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.config;
+package ru.asphaltica.restaurantvoting.app.config;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,11 +8,11 @@ import ru.asphaltica.restaurantvoting.model.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MyUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
     private User user;
 
-    public MyUserDetails(User user) {
+    public CustomUserDetails(User user) {
         this.user = user;
     }
 
@@ -50,5 +50,9 @@ public class MyUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public User getUser(){
+        return this.user;
     }
 }

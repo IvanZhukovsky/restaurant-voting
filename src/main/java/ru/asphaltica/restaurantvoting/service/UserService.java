@@ -1,34 +1,28 @@
 package ru.asphaltica.restaurantvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
+import ru.asphaltica.restaurantvoting.common.error.NotFoundException;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.repository.UserRepository;
 
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     public User findById(int id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with this id wasn't found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     @Transactional
@@ -57,6 +51,7 @@ public class UserService {
     @Transactional
     public void update(User newUser) {
         User oldUser = findById(newUser.getId());
+
         if (newUser.getPassword() == null) {
             newUser.setPassword(oldUser.getPassword());
         } else {

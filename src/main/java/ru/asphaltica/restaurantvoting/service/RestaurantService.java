@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +11,10 @@ import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@AllArgsConstructor
 public class RestaurantService {
-    private final RestaurantRepository restaurantRepository;
 
-    @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
-    }
+    private final RestaurantRepository restaurantRepository;
 
     public List<Restaurant> findAll(){
         return restaurantRepository.findAll();

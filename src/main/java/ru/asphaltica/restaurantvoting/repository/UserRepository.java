@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-@Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByLastNameContainingIgnoreCase(String lastName);
     Optional<User> findByEmailIgnoreCase(String email);

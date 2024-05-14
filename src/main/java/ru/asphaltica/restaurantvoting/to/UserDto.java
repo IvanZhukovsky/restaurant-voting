@@ -3,6 +3,7 @@ package ru.asphaltica.restaurantvoting.to;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,11 +20,14 @@ public class UserDto {
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String email;
 
+    @NotEmpty(message = "first name must not be empty")
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String firstName;
 
+    @NotEmpty(message = "last name must not be empty")
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String lastName;
+
 
     @Size(max = 256, message = "length should not exceed 256 characters")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

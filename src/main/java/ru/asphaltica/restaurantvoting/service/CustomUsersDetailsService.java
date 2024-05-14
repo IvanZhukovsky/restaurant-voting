@@ -1,32 +1,25 @@
 package ru.asphaltica.restaurantvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.asphaltica.restaurantvoting.config.MyUserDetails;
+import ru.asphaltica.restaurantvoting.app.config.CustomUserDetails;
 import ru.asphaltica.restaurantvoting.model.User;
 import ru.asphaltica.restaurantvoting.repository.UserRepository;
 
 import java.util.Optional;
 
 @Service
-public class MyUsersDetailsService implements UserDetailsService {
-
+@AllArgsConstructor
+public class CustomUsersDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
-    @Autowired
-    public MyUsersDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public MyUsersDetailsService() {
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmailIgnoreCase(email);
-        return user.map(MyUserDetails::new).orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
+        return user.map(CustomUserDetails::new).orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
     }
 }

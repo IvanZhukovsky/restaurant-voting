@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.asphaltica.restaurantvoting.to.UserDto;
@@ -32,16 +34,17 @@ import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClien
 @RestController
 @RequestMapping(value = AdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@AllArgsConstructor
 public class AdminController {
 
     public static final String REST_URL = "/api/admin/users";
     private final UserService userService;
-    private final UserValidator userValidator;
+    private final UniqueMailValidator uniqueMailValidator;
 
-    @Autowired
-    public AdminController(UserService userService, UserValidator userValidator) {
-        this.userService = userService;
-        this.userValidator = userValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(uniqueMailValidator);
     }
 
     @Operation(
@@ -49,12 +52,9 @@ public class AdminController {
             description = "Позволяет администратору получить перечень всех зарегистрированных пользователей"
     )
     @GetMapping
-    public List<UserDto> getAll() {
+    public List<User> getAll() {
         log.info("get all Users");
-        return userService.findAll()
-                .stream()
-                .map(UserMapper::convertToUserDTO)
-                .collect(Collectors.toList());
+        return userService.findAll();
     }
 
     @Operation(
@@ -71,14 +71,8 @@ public class AdminController {
             description = "Позволяет администратору зарегистрировать пользователя на основе его данных"
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(@Valid @RequestBody UserDto userDTO, BindingResult bindingResult) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         log.info("create new user");
-        User user = UserMapper.convertToUser(userDTO);
-        userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-             throw new EntityException(returnErrorsToClient(bindingResult));
-        }
-        log.info("Validation of new user data passed");
         User created = userService.create(user);
         log.info("A user has been created with id = {}", created.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -104,12 +98,8 @@ public class AdminController {
     )
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody UserDto userDTO, @PathVariable int id, BindingResult bindingResult){
+    public void update(@Valid @RequestBody User user, @PathVariable int id){
         log.info("Updating user with id = {}", id);
-        User user = UserMapper.convertToUser(userDTO);
-        if (bindingResult.hasErrors()) {
-            throw new EntityException(returnErrorsToClient(bindingResult));
-        }
         user.setId(id);
         userService.update(user);
     }
@@ -118,10 +108,10 @@ public class AdminController {
             description = "Позволяет администратору получить информацию о зарегистрированном пользователе по его email"
     )
     @Validated
-    @GetMapping("/by")
-    public UserDto getByMail (@RequestParam @Email @NotBlank String email) {
+    @GetMapping("/by-email")
+    public User getByMail (@RequestParam @Email @NotBlank String email) {
         log.info("Get a user from email : {}", email);
-        return UserMapper.convertToUserDTO(userService.findByMail(email));
+        return userService.findByMail(email);
     }
 
 

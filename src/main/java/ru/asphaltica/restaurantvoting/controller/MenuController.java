@@ -3,6 +3,7 @@ package ru.asphaltica.restaurantvoting.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/menus")
 @Slf4j
+@AllArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
     private final MenuValidator menuValidator;
-
-    @Autowired
-    public MenuController(MenuService menuService, MenuValidator menuValidator) {
-        this.menuService = menuService;
-        this.menuValidator = menuValidator;
-    }
 
     @Operation(
             summary = "Получение полного перечня созданных меню",

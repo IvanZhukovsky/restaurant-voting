@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +11,11 @@ import ru.asphaltica.restaurantvoting.repository.DishRepository;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@AllArgsConstructor
 public class DishService {
     private final DishRepository dishRepository;
     private static final String EXCEPTION_MESSAGE = "Dish with this id wasn't found";
 
-    @Autowired
-    public DishService(DishRepository dishRepository) {
-        this.dishRepository = dishRepository;
-    }
 
     public List<Dish> findAll(){
         return dishRepository.findAll();

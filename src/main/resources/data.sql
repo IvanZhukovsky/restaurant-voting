@@ -1,6 +1,6 @@
 INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
 VALUES ('user@gmail.com', 'User_First', 'User_Last', '$2a$10$TG8ZznZ1srJZa6Vegvq/XuKdcdrslMHALOxDzY20wbpWOvl.YReoy'),
-       ('admin@javaops.ru', 'Admin_First', 'Admin_last',
+       ('admin@javaops.ru', 'Admin_First', 'Admin_Last',
         '$2a$10$MTMrh7X8UslRu2Dq5srro.d7oBjJQDz7b66xjViVyxsRwh4y0YCb.');
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),

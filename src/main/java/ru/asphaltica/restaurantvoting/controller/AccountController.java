@@ -3,6 +3,7 @@ package ru.asphaltica.restaurantvoting.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +33,11 @@ import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClien
 @RestController
 @RequestMapping(value = "/api/account", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@AllArgsConstructor
 public class AccountController {
 
     private final UserService userService;
     private final UserValidator userValidator;
-
-    @Autowired
-    public AccountController(UserService userService, UserValidator userValidator) {
-        this.userService = userService;
-        this.userValidator = userValidator;
-    }
 
     @Operation(
             summary = "Получение пользователя",

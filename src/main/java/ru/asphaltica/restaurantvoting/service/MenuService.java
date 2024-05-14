@@ -1,5 +1,6 @@
 package ru.asphaltica.restaurantvoting.service;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,17 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional (readOnly = true)
+@AllArgsConstructor
 public class MenuService {
 
     private final MenuRepository menuRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public MenuService(MenuRepository menuRepository, ModelMapper modelMapper) {
-        this.menuRepository = menuRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<Menu> findAll(){
         return menuRepository.findAll();

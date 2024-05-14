@@ -1,6 +1,6 @@
 package ru.asphaltica.restaurantvoting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.model.Menu;
@@ -12,15 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@AllArgsConstructor
 public class VoteService {
 
     private final VoteRepository voteRepository;
-
-    @Autowired
-    public VoteService(VoteRepository voteRepository) {
-        this.voteRepository = voteRepository;
-    }
 
     @Transactional
     public String create(Vote vote) {

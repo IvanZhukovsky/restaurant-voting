@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.config;
+package ru.asphaltica.restaurantvoting.app.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,12 +8,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.asphaltica.restaurantvoting.service.MyUsersDetailsService;
+import ru.asphaltica.restaurantvoting.service.CustomUsersDetailsService;
 
 import static org.springframework.security.config.Customizer.*;
 
@@ -22,11 +22,11 @@ import static org.springframework.security.config.Customizer.*;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final MyUsersDetailsService myUsersDetailsService;
+    private final CustomUsersDetailsService customUsersDetailsService;
 
     @Autowired
-    public SecurityConfig(MyUsersDetailsService myUsersDetailsService) {
-        this.myUsersDetailsService = myUsersDetailsService;
+    public SecurityConfig(CustomUsersDetailsService customUsersDetailsService) {
+        this.customUsersDetailsService = customUsersDetailsService;
     }
 
     @Bean
@@ -52,7 +52,7 @@ public class SecurityConfig {
                                         "/api/menus/**").hasAuthority("ADMIN")
                 )
                 .httpBasic(withDefaults())
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
@@ -60,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(myUsersDetailsService);
+        provider.setUserDetailsService(customUsersDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

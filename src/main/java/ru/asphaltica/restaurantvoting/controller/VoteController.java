@@ -2,14 +2,16 @@ package ru.asphaltica.restaurantvoting.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.to.RestaurantDto;
-import ru.asphaltica.restaurantvoting.to.VotingResult;
-import ru.asphaltica.restaurantvoting.model.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.service.MenuService;
 import ru.asphaltica.restaurantvoting.service.VoteService;
+import ru.asphaltica.restaurantvoting.to.RestaurantDto;
+import ru.asphaltica.restaurantvoting.to.VotingResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +21,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/votes")
 @Slf4j
+@AllArgsConstructor
 public class VoteController {
 
     private final VoteService voteService;
     private final MenuService menuService;
-
-    @Autowired
-    public VoteController(VoteService voteService, MenuService menuService) {
-        this.voteService = voteService;
-        this.menuService = menuService;
-    }
-
 
     @Operation(
             summary = "Получение результатов голосования",
