@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.asphaltica.restaurantvoting.to.UserDto;
@@ -31,13 +30,12 @@ import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClien
 @Tag(name = "Контроллер аккаунта", description = "Контроллер позволяет пользователю " +
         "совершать основные операции над аккаунтом, в том числе регистрироваться")
 @RestController
-@RequestMapping(value = "/api/account", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class AccountController {
+public class ProfileController extends AbstractUserController {
 
-    private final UserService userService;
-    private final UserValidator userValidator;
+    public static final String REST_URL = "/api/profile";
 
     @Operation(
             summary = "Получение пользователя",
@@ -66,17 +64,13 @@ public class AccountController {
     )
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDTO, BindingResult bindingResult) {
+    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDTO) {
         log.info("register {}", userDTO);
         User user = UserMapper.convertToUser(userDTO);
-        userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new EntityException(returnErrorsToClient(bindingResult));
-        }
         user.setRoles(Set.of(Role.USER));
         User created = userService.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("api/account")
+                .path(REST_URL)
                 .build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

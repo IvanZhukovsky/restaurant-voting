@@ -1,29 +1,19 @@
 package ru.asphaltica.restaurantvoting.to;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.modelmapper.ModelMapper;
+import ru.asphaltica.restaurantvoting.common.HasIdAndName;
+import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantDto {
+public class RestaurantDto extends BaseEntity implements HasIdAndName {
 
-    private int id;
-    @NotEmpty
+    @NotBlank
     private String name;
-
-    private static  ModelMapper modelMapper = new ModelMapper();
-
-    public static Restaurant convertToRestaurant(RestaurantDto restaurantDTO) {
-        return modelMapper.map(restaurantDTO, Restaurant.class);
-    }
-
-    public static RestaurantDto convertToRestaurantDTO(Restaurant restaurant) {
-        return modelMapper.map(restaurant, RestaurantDto.class);
-    }
-
-
 }

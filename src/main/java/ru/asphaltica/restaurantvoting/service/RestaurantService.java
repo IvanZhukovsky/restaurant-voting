@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.asphaltica.restaurantvoting.common.error.NotFoundException;
 import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
@@ -21,7 +22,7 @@ public class RestaurantService {
     }
 
     public Restaurant findById(int id){
-        return restaurantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Restaurant with this id wasn't found"));
+        return restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     @Transactional
@@ -43,7 +44,7 @@ public class RestaurantService {
     }
 
     private void checkExistById(int id) {
-        if (!restaurantRepository.existsById(id)) throw new EntityNotFoundException("Restaurant with this id wasn't found");
+        if (!restaurantRepository.existsById(id)) throw new NotFoundException("Entity with id=" + id + " not found");
     }
 
 }

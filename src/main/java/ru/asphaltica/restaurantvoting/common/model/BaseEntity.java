@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.model;
+package ru.asphaltica.restaurantvoting.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

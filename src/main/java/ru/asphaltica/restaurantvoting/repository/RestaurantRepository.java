@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 
+import java.util.Optional;
+
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
-    boolean existsByNameIgnoreCase(String name);
+    Optional<Restaurant> findByNameIgnoreCase(String name);
 }

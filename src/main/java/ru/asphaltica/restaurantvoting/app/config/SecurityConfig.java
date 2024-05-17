@@ -38,11 +38,11 @@ public class SecurityConfig {
                                         "/swagger-ui.html",
                                         "/api/votes/voting_result"
                                 ).permitAll()
-                                .requestMatchers("/api/account/register"
+                                .requestMatchers("/api/profile/register"
                                 ).anonymous()
                                 .requestMatchers(
                                         "/api/restaurants/available",
-                                        "/api/account/**",
+                                        "/api/profile/**",
                                         "/api/restaurants/{id}/vote"
                                 ).hasAuthority("USER")
                                 .requestMatchers(

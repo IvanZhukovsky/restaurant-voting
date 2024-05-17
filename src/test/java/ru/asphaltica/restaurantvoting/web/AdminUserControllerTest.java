@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.asphaltica.restaurantvoting.UserTestData.*;
 import static ru.asphaltica.restaurantvoting.controller.AdminController.*;
-import static ru.asphaltica.restaurantvoting.controller.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
+import static ru.asphaltica.restaurantvoting.validation.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
 
 class AdminUserControllerTest extends AbstractControllerTest {
 
@@ -120,8 +120,9 @@ class AdminUserControllerTest extends AbstractControllerTest {
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(user, admin));
+                .andExpect(USER_MATCHER.contentJson(user, admin, guest));
     }
 
     @Test

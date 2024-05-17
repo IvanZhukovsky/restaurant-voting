@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithUserDetails("admin@javaops.ru")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Sql(value = {"/populate_test_data.sql"}, executionPhase =  Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class AccountControllerTest {
+class ProfileControllerTest {
 
     @Autowired
     MockMvc mockMvc;

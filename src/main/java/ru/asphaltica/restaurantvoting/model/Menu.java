@@ -1,51 +1,48 @@
 package ru.asphaltica.restaurantvoting.model;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.asphaltica.restaurantvoting.common.HasId;
+import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "menu")
-@Data
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "available_date"})})
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+public class Menu extends BaseEntity implements HasId {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "available_date")
+    private LocalDate availableDate;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd : HH-mm-ss")
-    private LocalDateTime createDate;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant ownRestaurant;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "menu_dish",
-            joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "dish_id"))
-    private List<Dish> dishes;
+    @ElementCollection
+    @CollectionTable(name = "menu_dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_id", "name"})})
+    @NotNull
+    @NotEmpty
+    private Set<Dish> dishes = new HashSet<>();
 
+    public Menu(Integer id, LocalDate availableDate, Restaurant ownRestaurant, Set<Dish> dishes) {
+        super(id);
+        this.availableDate = availableDate;
+        this.ownRestaurant = ownRestaurant;
+        this.dishes = dishes;
+    }
 }

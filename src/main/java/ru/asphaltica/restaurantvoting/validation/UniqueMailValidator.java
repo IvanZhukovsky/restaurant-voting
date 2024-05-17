@@ -1,4 +1,4 @@
-package ru.asphaltica.restaurantvoting.controller;
+package ru.asphaltica.restaurantvoting.validation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -28,9 +28,6 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
 
     @Override
     public void validate(@NonNull Object target, @NonNull Errors errors) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails personDetails = (CustomUserDetails) authentication.getPrincipal();
-            User authUser = personDetails.getUser();
 
         HasIdAndEmail user = ((HasIdAndEmail) target);
         if (StringUtils.hasText(user.getEmail())) {
@@ -41,6 +38,10 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
 
                             // it is ok, if update ourselves
                             if (user.getId() != null && dbId == user.id()) return;
+
+                            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                            CustomUserDetails personDetails = (CustomUserDetails) authentication.getPrincipal();
+                            User authUser = personDetails.getUser();
 
                             // Workaround for update with user.id=null in request body
                             // ValidationUtil.assureIdConsistent called after this validation

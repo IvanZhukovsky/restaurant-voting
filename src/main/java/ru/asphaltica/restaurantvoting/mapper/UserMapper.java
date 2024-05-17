@@ -19,4 +19,12 @@ public class UserMapper {
         return modelMapper.map(user, UserDto.class);
     }
 
+    public static User updateFromTo(User user, UserDto userDto) {
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail().toLowerCase());
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
+
 }

@@ -1,19 +1,22 @@
 package ru.asphaltica.restaurantvoting.to;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import ru.asphaltica.restaurantvoting.common.HasIdAndEmail;
+import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 import ru.asphaltica.restaurantvoting.model.Role;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 @Getter
 @Setter
-public class UserDto {
+@AllArgsConstructor
+public class UserDto extends BaseEntity implements HasIdAndEmail {
 
     @Email(message = "format must match email address")
     @NotEmpty(message = "email address must be specified")
@@ -30,9 +33,9 @@ public class UserDto {
 
 
     @Size(max = 256, message = "length should not exceed 256 characters")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private Set<Role> roles;
+    private Set<Role> roles = EnumSet.noneOf(Role.class);
 
 }

@@ -15,30 +15,30 @@ import java.util.Optional;
 @AllArgsConstructor
 public class VoteService {
 
-    private final VoteRepository voteRepository;
+    //private final VoteRepository voteRepository;
 
-    @Transactional
-    public String create(Vote vote) {
-        if (DateTimeUtil.isVotePeriod()) {
-            Optional<Vote> updated = voteRepository.findByUser(vote.getUser());
-            if (updated.isPresent()) {
-                voteRepository.delete(updated.get());
-                voteRepository.save(vote);
-            } else {
-                voteRepository.save(vote);
-            }
-            return "Вы успешно проголосовали";
-        }
-        return "На сегодня голосование завершено";
-    }
-
-    public List<Vote> findAllToday() {
-        return voteRepository.findAllByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting()).orElse(null);
-    }
-
-    public int countByMenu(Menu menu) {
-        return voteRepository.countAllByMenuAndCreateDateBetween(menu, DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting()).orElse(0);
-    }
+//    @Transactional
+//    public String create(Vote vote) {
+//        if (DateTimeUtil.isVotePeriod()) {
+//            Optional<Vote> updated = voteRepository.findByUser(vote.getUser());
+//            if (updated.isPresent()) {
+//                voteRepository.delete(updated.get());
+//                voteRepository.save(vote);
+//            } else {
+//                voteRepository.save(vote);
+//            }
+//            return "Вы успешно проголосовали";
+//        }
+//        return "На сегодня голосование завершено";
+//    }
+//
+//    public List<Vote> findAllToday() {
+//        return voteRepository.findAllByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting()).orElse(null);
+//    }
+//
+//    public int countByMenu(Menu menu) {
+//        return voteRepository.countAllByMenuAndCreateDateBetween(menu, DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting()).orElse(0);
+//    }
 
 
 }

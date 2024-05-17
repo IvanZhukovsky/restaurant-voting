@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import ru.asphaltica.restaurantvoting.common.HasIdAndEmail;
+import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 
 import java.util.EnumSet;
 import java.util.Set;

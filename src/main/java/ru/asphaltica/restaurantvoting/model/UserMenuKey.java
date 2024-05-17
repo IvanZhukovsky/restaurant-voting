@@ -6,7 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Embeddable
+//@Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

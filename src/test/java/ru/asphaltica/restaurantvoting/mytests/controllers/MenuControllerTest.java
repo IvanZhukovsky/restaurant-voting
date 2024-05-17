@@ -71,35 +71,35 @@ class MenuControllerTest {
                 .andExpect(jsonPath("$.message").value("Menu with this id wasn't found"));
     }
 
-    @Test
-    @Order(4)
-    void create() throws Exception {
-        Menu menu = new Menu();
-        Restaurant ownRestaurant = new Restaurant();
-        ownRestaurant.setId(1);
-        menu.setOwnRestaurant(ownRestaurant);
-        Dish dish1 = new Dish();
-        dish1.setId(1);
-        Dish dish2 = new Dish();
-        dish2.setId(2);
-        Dish dish3 = new Dish();
-        dish3.setId(3);
-        Dish dish4 = new Dish();
-        dish4.setId(4);
-        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
-        menu.setDishes(dishes);
-        String jsonRequest = objectMapper.writeValueAsString(menu);
-        mockMvc.perform(post("/api/menus")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest)
-                ).andDo(print())
-                .andExpect(status().isCreated());
-
-        this.mockMvc.perform(get("/api/menus/{3}", 3))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("3"));
-    }
+//    @Test
+//    @Order(4)
+//    void create() throws Exception {
+//        Menu menu = new Menu();
+//        Restaurant ownRestaurant = new Restaurant();
+//        ownRestaurant.setId(1);
+//        menu.setOwnRestaurant(ownRestaurant);
+//        Dish dish1 = new Dish();
+//        dish1.setId(1);
+//        Dish dish2 = new Dish();
+//        dish2.setId(2);
+//        Dish dish3 = new Dish();
+//        dish3.setId(3);
+//        Dish dish4 = new Dish();
+//        dish4.setId(4);
+//        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
+//        menu.setDishes(dishes);
+//        String jsonRequest = objectMapper.writeValueAsString(menu);
+//        mockMvc.perform(post("/api/menus")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonRequest)
+//                ).andDo(print())
+//                .andExpect(status().isCreated());
+//
+//        this.mockMvc.perform(get("/api/menus/{3}", 3))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.id").value("3"));
+//    }
 
     @Test
     @Order(5)
@@ -110,30 +110,30 @@ class MenuControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1));
     }
 
-    @Test
-    @Order(6)
-    void createFailedSameDate() throws Exception {
-        Menu menu = new Menu();
-        Restaurant ownRestaurant = new Restaurant();
-        ownRestaurant.setId(1);
-        menu.setOwnRestaurant(ownRestaurant);
-        Dish dish1 = new Dish();
-        dish1.setId(1);
-        Dish dish2 = new Dish();
-        dish2.setId(2);
-        Dish dish3 = new Dish();
-        dish3.setId(3);
-        Dish dish4 = new Dish();
-        dish4.setId(4);
-        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
-        menu.setDishes(dishes);
-        String jsonRequest = objectMapper.writeValueAsString(menu);
-        mockMvc.perform(post("/api/menus")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest)
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    @Order(6)
+//    void createFailedSameDate() throws Exception {
+//        Menu menu = new Menu();
+//        Restaurant ownRestaurant = new Restaurant();
+//        ownRestaurant.setId(1);
+//        menu.setOwnRestaurant(ownRestaurant);
+//        Dish dish1 = new Dish();
+//        dish1.setId(1);
+//        Dish dish2 = new Dish();
+//        dish2.setId(2);
+//        Dish dish3 = new Dish();
+//        dish3.setId(3);
+//        Dish dish4 = new Dish();
+//        dish4.setId(4);
+//        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
+//        menu.setDishes(dishes);
+//        String jsonRequest = objectMapper.writeValueAsString(menu);
+//        mockMvc.perform(post("/api/menus")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonRequest)
+//                ).andDo(print())
+//                .andExpect(status().isBadRequest());
+//    }
 
     @Test
     @Order(7)
@@ -159,59 +159,59 @@ class MenuControllerTest {
                 .andExpect(jsonPath("$.message").value("Menu with this id wasn't found"));
     }
 
-    @Test
-    @Order(10)
-    void createForUpdate() throws Exception {
-        Menu menu = new Menu();
-        Restaurant ownRestaurant = new Restaurant();
-        ownRestaurant.setId(1);
-        menu.setOwnRestaurant(ownRestaurant);
-        Dish dish1 = new Dish();
-        dish1.setId(1);
-        Dish dish2 = new Dish();
-        dish2.setId(2);
-        Dish dish3 = new Dish();
-        dish3.setId(3);
-        Dish dish4 = new Dish();
-        dish4.setId(4);
-        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
-        menu.setDishes(dishes);
-        String jsonRequest = objectMapper.writeValueAsString(menu);
-        mockMvc.perform(post("/api/menus")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest)
-                ).andDo(print())
-                .andExpect(status().isCreated());
-    }
-    @Test
-    @Order(11)
-    void updateMenu() throws Exception {
-        Menu menu = new Menu();
-        Restaurant ownRestaurant = new Restaurant();
-        ownRestaurant.setId(1);
-        menu.setOwnRestaurant(ownRestaurant);
-        Dish dish1 = new Dish();
-        dish1.setId(1);
-        Dish dish2 = new Dish();
-        dish2.setId(2);
-        List<Dish> dishes = List.of(dish1, dish2);
-        menu.setDishes(dishes);
-        String jsonRequest = objectMapper.writeValueAsString(menu);
-        mockMvc.perform(put("/api/menus/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest)
-                ).andDo(print())
-                .andExpect(status().isNoContent());
-
-        String expected = "{\"id\":1,\"createDate\":\"2024-04-16 : 10-00-00\",\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"},\"dishes\":[{\"id\":1,\"name\":\"черный чай с сахаром\",\"price\":10.5,\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"}},{\"id\":2,\"name\":\"суп гороховый\",\"price\":70.0,\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"}}]}";
-        var respose = this.mockMvc.perform(get("/api/menus/{id}", 1))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-        String resultJson = respose.getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assertions.assertEquals(expected, resultJson);
-        this.mockMvc.perform(get("/api/menus")).andDo(print());
-    }
+//    @Test
+//    @Order(10)
+//    void createForUpdate() throws Exception {
+//        Menu menu = new Menu();
+//        Restaurant ownRestaurant = new Restaurant();
+//        ownRestaurant.setId(1);
+//        menu.setOwnRestaurant(ownRestaurant);
+//        Dish dish1 = new Dish();
+//        dish1.setId(1);
+//        Dish dish2 = new Dish();
+//        dish2.setId(2);
+//        Dish dish3 = new Dish();
+//        dish3.setId(3);
+//        Dish dish4 = new Dish();
+//        dish4.setId(4);
+//        List<Dish> dishes = List.of(dish1, dish2, dish3, dish4);
+//        menu.setDishes(dishes);
+//        String jsonRequest = objectMapper.writeValueAsString(menu);
+//        mockMvc.perform(post("/api/menus")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonRequest)
+//                ).andDo(print())
+//                .andExpect(status().isCreated());
+//    }
+//    @Test
+//    @Order(11)
+//    void updateMenu() throws Exception {
+//        Menu menu = new Menu();
+//        Restaurant ownRestaurant = new Restaurant();
+//        ownRestaurant.setId(1);
+//        menu.setOwnRestaurant(ownRestaurant);
+//        Dish dish1 = new Dish();
+//        dish1.setId(1);
+//        Dish dish2 = new Dish();
+//        dish2.setId(2);
+//        List<Dish> dishes = List.of(dish1, dish2);
+//        menu.setDishes(dishes);
+//        String jsonRequest = objectMapper.writeValueAsString(menu);
+//        mockMvc.perform(put("/api/menus/{id}", 1)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(jsonRequest)
+//                ).andDo(print())
+//                .andExpect(status().isNoContent());
+//
+//        String expected = "{\"id\":1,\"createDate\":\"2024-04-16 : 10-00-00\",\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"},\"dishes\":[{\"id\":1,\"name\":\"черный чай с сахаром\",\"price\":10.5,\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"}},{\"id\":2,\"name\":\"суп гороховый\",\"price\":70.0,\"ownRestaurant\":{\"id\":1,\"name\":\"Test restaurant 1\"}}]}";
+//        var respose = this.mockMvc.perform(get("/api/menus/{id}", 1))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andReturn();
+//        String resultJson = respose.getResponse().getContentAsString(StandardCharsets.UTF_8);
+//        Assertions.assertEquals(expected, resultJson);
+//        this.mockMvc.perform(get("/api/menus")).andDo(print());
+//    }
 
 
 

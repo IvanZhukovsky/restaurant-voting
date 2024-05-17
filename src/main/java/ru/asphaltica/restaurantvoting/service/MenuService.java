@@ -1,60 +1,49 @@
 package ru.asphaltica.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.asphaltica.restaurantvoting.to.DishDto;
-import ru.asphaltica.restaurantvoting.to.MenuDto;
-import ru.asphaltica.restaurantvoting.to.RestaurantDto;
-import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
+import ru.asphaltica.restaurantvoting.common.error.NotFoundException;
 import ru.asphaltica.restaurantvoting.model.Menu;
-import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.MenuRepository;
-import ru.asphaltica.restaurantvoting.util.DateTimeUtil;
+import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class MenuService {
 
     private final MenuRepository menuRepository;
-    private final ModelMapper modelMapper;
+    private final RestaurantRepository restaurantRepository;
 
-    public List<Menu> findAll(){
-        return menuRepository.findAll();
+    public List<Menu> findAll() {
+        return menuRepository.findAllWithRestaurant();
     }
 
-    @Cacheable(value = "MenusAvailable", unless = "#result == null")
-    public List<Menu> findAllTodayAvailable(){
-        return menuRepository.findByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting());
+    //
+//    @Cacheable(value = "MenusAvailable", unless = "#result == null")
+//    public List<Menu> findAllTodayAvailable(){
+//        return menuRepository.findByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting());
+//    }
+//
+    public Menu findByIdWithRestaurantAndDishes(int id) {
+        return menuRepository.findByIdWithRestaurantAndDishes(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
-    public Menu findById(int id){
-        return menuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Menu with this id wasn't found"));
-    }
-
-    public Menu getAvailableMenu(int restaurantId) {
-        Restaurant onwRestaurant = new Restaurant();
-        onwRestaurant.setId(restaurantId);
-        return menuRepository
-                .findByOwnRestaurantAndCreateDateBetween(onwRestaurant,
-                        DateTimeUtil.atStartOfToday(),
-                        DateTimeUtil.atEndOfVoting())
-                .orElseThrow(() -> new EntityNotFoundException("this restaurant has no menus available today"));
+    public Menu findById(int id) {
+        return menuRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public List<Menu> findAllByOwnRestaurantId(int restaurantId) {
-        return menuRepository.findAllByOwnRestaurantId(restaurantId);
+        if (!restaurantRepository.existsById(restaurantId)) {
+            throw new NotFoundException("Entity with id=" + restaurantId + " not found");
+        }
+        return menuRepository.findAllByRestaurantIdWithDishes(restaurantId);
     }
-
     @Transactional
-    public MenuDto create(Menu menu) {
-        return convertToMenuDTO(menuRepository.save(menu));
+    public Menu create(Menu menu) {
+        return menuRepository.save(menu);
     }
 
     @Transactional
@@ -65,21 +54,7 @@ public class MenuService {
 
     @Transactional
     public void update(Menu menu) {
-        Menu updated = findById(menu.getId());
-        menu.setCreateDate(updated.getCreateDate());
+        menuRepository.findByIdWithRestaurantAndDishes(menu.getId());
         menuRepository.save(menu);
     }
-
-    private MenuDto convertToMenuDTO(Menu menu) {
-        MenuDto menuDTO = new MenuDto();
-        menuDTO.setId(menu.getId());
-        menuDTO.setCreateDate(menu.getCreateDate());
-        RestaurantDto restaurantDTO = modelMapper.map(menu.getOwnRestaurant(), RestaurantDto.class);
-        menuDTO.setOwnRestaurant(restaurantDTO);
-        List<DishDto> dishes = menu.getDishes().stream().map(dish -> modelMapper.map(dish, DishDto.class)).collect(Collectors.toList());
-        menuDTO.setDishes(dishes);
-        return menuDTO;
-    }
-
-
 }

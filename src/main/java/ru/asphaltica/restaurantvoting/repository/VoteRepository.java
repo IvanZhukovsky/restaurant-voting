@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-public interface VoteRepository extends JpaRepository<Vote, Integer> {
-    Optional<List<Vote>> findAllByCreateDateIsBetween(LocalDateTime createDate1, LocalDateTime createDate2);
-    Optional<Integer> countAllByMenuAndCreateDateBetween(Menu menu, LocalDateTime createDate1, LocalDateTime createDate2);
-    Optional<Vote> findByUser(User user);
+public interface VoteRepository  {
+//    Optional<List<Vote>> findAllByCreateDateIsBetween(LocalDateTime createDate1, LocalDateTime createDate2);
+//    Optional<Integer> countAllByMenuAndCreateDateBetween(Menu menu, LocalDateTime createDate1, LocalDateTime createDate2);
+//    Optional<Vote> findByUser(User user);
 }
