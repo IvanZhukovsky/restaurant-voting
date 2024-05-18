@@ -21,6 +21,8 @@ public class MenuTestData {
     public static final int MENU2_ID = 2;
     public static final int MENU3_ID = 3;
     public static final int MENU4_ID = 4;
+    public static final int MENU5_ID = 5;
+    public static final int MENU6_ID = 6;
     public static final int NOT_FOUND_ID = 100;
 
     public static final Menu menu1 = new Menu(MENU1_ID, LocalDate.of(2024, 7, 10), restaurant1,  Set.of(
@@ -59,6 +61,20 @@ public class MenuTestData {
                 new Dish("пирожное", new BigDecimal("7.58"))
         ));
     }
+
+    public static final Menu menu5 = new Menu(MENU5_ID, LocalDate.now(), restaurant1,  Set.of(
+            new Dish("чай с молоком", new BigDecimal("30.10")),
+            new Dish("борщ", new BigDecimal("15.40")),
+            new Dish("горчица", new BigDecimal("10.00")),
+            new Dish("пирожное", new BigDecimal("7.58"))
+    ));
+
+    public static final Menu menu6 = new Menu(MENU6_ID, LocalDate.now(), restaurant2,  Set.of(
+            new Dish("хинкали со свининой", new BigDecimal("250.50")),
+            new Dish("соус томатный", new BigDecimal("46.40")),
+            new Dish("латте", new BigDecimal("150.25")),
+            new Dish("конфета", new BigDecimal("72.50"))
+    ));
 
     public static final String JSON_WITH_DUPBLICATE_DISHES = "{\"id\":null,\"availableDate\":\"2024-07-11\",\"ownRestaurant\":{\"id\":1,\"name\":\"Щепка\"}," +
             "\"dishes\":[{\"name\":\"щи\",\"price\":13.20}, {\"name\":\"щи\",\"price\":13.20}, {\"name\":\"запеканка\",\"price\":9.99},{\"name\":\"чай с лимоном\",\"price\":30.60}]}";

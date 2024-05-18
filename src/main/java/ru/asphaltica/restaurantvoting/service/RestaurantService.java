@@ -1,11 +1,9 @@
 package ru.asphaltica.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.common.error.NotFoundException;
-import ru.asphaltica.restaurantvoting.exceptions.EntityNotFoundException;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 

@@ -10,22 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.asphaltica.restaurantvoting.to.UserDto;
-import ru.asphaltica.restaurantvoting.exceptions.EntityException;
 import ru.asphaltica.restaurantvoting.mapper.UserMapper;
 import ru.asphaltica.restaurantvoting.model.Role;
 import ru.asphaltica.restaurantvoting.model.User;
-import ru.asphaltica.restaurantvoting.service.UserService;
-import ru.asphaltica.restaurantvoting.validation.UserValidator;
+import ru.asphaltica.restaurantvoting.to.UserDto;
 
 import java.net.URI;
 import java.util.Set;
-
-import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClient;
 
 @Tag(name = "Контроллер аккаунта", description = "Контроллер позволяет пользователю " +
         "совершать основные операции над аккаунтом, в том числе регистрироваться")

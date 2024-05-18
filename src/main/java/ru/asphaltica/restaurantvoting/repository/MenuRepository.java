@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +27,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.ownRestaurant LEFT JOIN FETCH m.dishes WHERE m.id=?1")
     Optional<Menu> findByIdWithRestaurantAndDishes(int id);
+
+    @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.ownRestaurant WHERE m.availableDate=?1 AND m.ownRestaurant.id=?2")
+    Optional<List<Menu>> findAllByAvailableDateAndAndOwnRestaurant(LocalDate availableDate, int restaurantId);
 }

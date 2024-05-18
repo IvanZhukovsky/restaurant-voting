@@ -36,7 +36,9 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
-                                        "/api/votes/voting_result"
+                                        "/api/votes",
+                                        "/api/votes/*"
+
                                 ).permitAll()
                                 .requestMatchers("/api/profile/register"
                                 ).anonymous()

@@ -26,15 +26,6 @@ public class Restaurant extends BaseEntity implements HasId {
     @NotBlank(message = "the restaurant name must not be empty")
     private String name;
 
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-//    @OneToMany(mappedBy = "ownRestaurant")
-//    private List<Menu> menus;
-//
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "ownRestaurant")
-//    private List<Dish> dishes;
-
     public Restaurant(Integer id, String name) {
         super(id);
         this.name = name;

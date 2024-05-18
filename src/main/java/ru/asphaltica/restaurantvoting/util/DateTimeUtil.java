@@ -1,33 +1,34 @@
 package ru.asphaltica.restaurantvoting.util;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Component
+@Setter
 public class DateTimeUtil {
 
-    private static final int END_VOTING_HOURS = 17;
-    private static final int END_VOTING_MINUTES = 0;
+    private int endOfVotingHours = 11;
+    private int endVotingMinutes = 0;
 
-    private DateTimeUtil() {
-    }
-
-    public static LocalDateTime atStartOfToday(){
+    public LocalDateTime atStartOfToday(){
         return LocalDate.now().atStartOfDay();
     }
 
-    public static LocalDateTime atEndOfToday(){
+    public LocalDateTime atEndOfToday(){
         return LocalDate.now().atTime(LocalTime.MAX);
     }
 
-    public static LocalDateTime atEndOfVoting(){
-        return LocalDate.now().atTime(END_VOTING_HOURS, END_VOTING_MINUTES);
+    public LocalDateTime atEndOfVoting(){
+        return LocalDate.now().atTime(endOfVotingHours, endVotingMinutes);
     }
 
-    public static boolean isVotePeriod(){
+    public boolean isVoteChangePeriod(){
         LocalDateTime now = LocalDateTime.now();
         return now.isAfter(atStartOfToday()) && now.isBefore(atEndOfVoting());
     }
-
-
 }

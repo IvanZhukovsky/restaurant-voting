@@ -2,7 +2,10 @@ package ru.asphaltica.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import ru.asphaltica.restaurantvoting.common.HasIdAndEmail;
@@ -24,17 +27,17 @@ public class User extends BaseEntity implements HasIdAndEmail {
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String email;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     @NotBlank(message = "first name must not be empty")
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     @NotBlank(message = "last name must not be empty")
     @Size(max = 128, message = "length should not exceed 128 characters")
     private String lastName;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     @Size(max = 256, message = "length should not exceed 256 characters")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -55,12 +58,7 @@ public class User extends BaseEntity implements HasIdAndEmail {
         this.roles = roles;
     }
 
-    public User (User u) {
+    public User(User u) {
         this(u.id, u.email, u.firstName, u.lastName, u.password, u.roles);
     }
-
-    public boolean hasRole(Role role) {
-        return roles.contains(role);
-    }
-
 }

@@ -8,30 +8,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.codec.Utf8;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.to.RestaurantDto;
-import ru.asphaltica.restaurantvoting.exceptions.EntityException;
-import ru.asphaltica.restaurantvoting.mapper.MenuMapper;
 import ru.asphaltica.restaurantvoting.mapper.RestaurantMapper;
-import ru.asphaltica.restaurantvoting.model.*;
-import ru.asphaltica.restaurantvoting.service.MenuService;
+import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.service.RestaurantService;
-import ru.asphaltica.restaurantvoting.service.UserService;
-import ru.asphaltica.restaurantvoting.service.VoteService;
-import ru.asphaltica.restaurantvoting.validation.RestaurantValidator;
+import ru.asphaltica.restaurantvoting.to.RestaurantDto;
 import ru.asphaltica.restaurantvoting.util.URIUtil;
+import ru.asphaltica.restaurantvoting.validation.RestaurantValidator;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
-import static ru.asphaltica.restaurantvoting.util.ErrorsUtil.returnErrorsToClient;
 
 @Tag(name = "Администрирование ресторанов и получения данных о них", description = "Позволяет администратору " +
         "совершать основные операции над списком ресторанов, а пользователям голосовать и получать данные о них")
@@ -44,9 +31,6 @@ public class RestaurantController {
     public static final String REST_URL = "/api/restaurants";
 
     private final RestaurantService restaurantService;
-//    private final UserService userService;
-//    private final MenuService menuService;
-//    private final VoteService voteService;
     private final RestaurantValidator restaurantValidator;
 
     @InitBinder

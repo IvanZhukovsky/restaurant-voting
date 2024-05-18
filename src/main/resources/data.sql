@@ -57,6 +57,30 @@ VALUES (4, 'хинкали со свининой', 250.5),
        (4, 'латте', 150.25),
        (4, 'конфета', 72.5);
 
+INSERT INTO MENU (RESTAURANT_ID, AVAILABLE_DATE)
+VALUES (1, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, NAME, PRICE)
+VALUES (5, 'чай с молоком', 30.1),
+       (5, 'борщ', 15.4),
+       (5, 'горчица', 10.0),
+       (5, 'пирожное', 7.58);
+
+INSERT INTO MENU (RESTAURANT_ID, AVAILABLE_DATE)
+VALUES (2, NOW());
+
+INSERT INTO MENU_DISH (MENU_ID, NAME, PRICE)
+VALUES (6, 'хинкали со свининой', 250.5),
+       (6, 'соус томатный', 46.4),
+       (6, 'латте', 150.25),
+       (6, 'конфета', 72.5);
+
+INSERT INTO VOTE (CREATED_AT, RESTAURANT_ID, USER_ID)
+VALUES (NOW(),1,3);
+
+-- INSERT INTO VOTE (CREATED_AT, RESTAURANT_ID, USER_ID)
+-- VALUES (NOW(),1,2)
+
 
 
 -- INSERT INTO MENU (RESTAURANT_ID, CREATE_DATE)

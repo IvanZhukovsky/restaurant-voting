@@ -1,42 +1,44 @@
 package ru.asphaltica.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import ru.asphaltica.restaurantvoting.common.HasId;
+import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-//@Entity
-@Data
-public class Vote {
+@Entity
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"created_at", "user_id"})})
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Vote extends BaseEntity implements HasId {
 
-    @EmbeddedId
-    private UserMenuKey id;
+    @Column(updatable = false, nullable = false)
+    @CreationTimestamp
+    private LocalDate createdAt;
 
     @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @JsonIgnore
     @ManyToOne
-    @MapsId("menuId")
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 
-
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd : HH-mm-ss")
-    private LocalDateTime createDate;
-
+    public Vote(Integer id, LocalDate createdAt, User user, Restaurant restaurant) {
+        super(id);
+        this.createdAt = createdAt;
+        this.user = user;
+        this.restaurant = restaurant;
+    }
 }

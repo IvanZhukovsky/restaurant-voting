@@ -38,7 +38,7 @@ class MenuControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_MATCHER_WITHOUT_DISHES.contentJson(menu1, menu2, menu3, menu4));
+                .andExpect(MENU_MATCHER_WITHOUT_DISHES.contentJson(menu1, menu2, menu5, menu3, menu4, menu6));
     }
 
     @Test
@@ -48,7 +48,7 @@ class MenuControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_MATCHER_WITHOUT_RESTAURANT.contentJson(menu1, menu2));
+                .andExpect(MENU_MATCHER_WITHOUT_RESTAURANT.contentJson(menu5, menu1, menu2));
     }
 
     @Test
@@ -70,11 +70,11 @@ class MenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + MENU1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + MENU5_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(MenuTestData.MENU_MATCHER.contentJson(menu1));
+        .andExpect(MenuTestData.MENU_MATCHER.contentJson(menu5));
     }
 
     @Test

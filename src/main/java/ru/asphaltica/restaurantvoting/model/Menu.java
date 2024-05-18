@@ -25,11 +25,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class Menu extends BaseEntity implements HasId {
 
-    @Column(name = "available_date")
+    @Column(name = "available_date", nullable = false)
     private LocalDate availableDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant ownRestaurant;
 
