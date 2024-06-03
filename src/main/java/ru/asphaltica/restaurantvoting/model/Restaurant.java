@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.asphaltica.restaurantvoting.common.HasId;
+import ru.asphaltica.restaurantvoting.common.HasIdAndName;
 import ru.asphaltica.restaurantvoting.common.model.BaseEntity;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Restaurant extends BaseEntity implements HasId {
+public class Restaurant extends BaseEntity implements HasId, HasIdAndName {
 
     @Column(name = "name", nullable = false, unique = true)
     @Size(max = 128, message = "the length of the restaurant name should not exceed 128 characters")

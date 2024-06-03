@@ -10,10 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.asphaltica.restaurantvoting.mapper.RestaurantMapper;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.service.RestaurantService;
-import ru.asphaltica.restaurantvoting.to.RestaurantDto;
 import ru.asphaltica.restaurantvoting.util.URIUtil;
 import ru.asphaltica.restaurantvoting.validation.RestaurantValidator;
 
@@ -52,9 +50,9 @@ public class RestaurantController {
             description = "Позволяет администратору получить данные о ресторане по его id"
     )
     @GetMapping("/{id}")
-    public RestaurantDto get(@PathVariable int id) {
+    public Restaurant get(@PathVariable int id) {
         log.info("get restaurant with id = {}", id);
-        return RestaurantMapper.convertToRestaurantDTO(restaurantService.findById(id));
+        return restaurantService.findById(id);
     }
 
     @Operation(
@@ -62,9 +60,8 @@ public class RestaurantController {
             description = "Позволяет администратору создать новый ресторан"
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE+";charset=UTF-8")
-    public ResponseEntity<Restaurant> create(@RequestBody @Valid RestaurantDto restaurantDTO) {
+    public ResponseEntity<Restaurant> create(@RequestBody @Valid Restaurant restaurant) {
         log.info("create new restaurant");
-        Restaurant restaurant = RestaurantMapper.convertToRestaurant(restaurantDTO);
         restaurant.setId(null);
         Restaurant created = restaurantService.save(restaurant);
         log.info("A restaurant has been created with id = {}", created.getId());
@@ -88,9 +85,9 @@ public class RestaurantController {
     )
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @Valid @RequestBody RestaurantDto restaurantDTO){
+    public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant){
         log.info("Updating restaurant with id = {}", id);
-        restaurantService.update(id, RestaurantMapper.convertToRestaurant(restaurantDTO));
+        restaurantService.update(id, restaurant);
     }
 
     @Operation(

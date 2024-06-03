@@ -37,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(int id){
+    public void deleteById(int id) {
         findById(id);
         userRepository.deleteById(id);
     }
@@ -51,16 +51,31 @@ public class UserService {
     @Transactional
     public void update(User newUser) {
         User oldUser = findById(newUser.getId());
-        newUser.setRoles(oldUser.getRoles());
-        if (newUser.getPassword() == null) {
-            newUser.setPassword(oldUser.getPassword());
-        } else {
-            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        if (newUser.getRoles().isEmpty()) {
+            newUser.setRoles(oldUser.getRoles());
         }
+        setUserPassword(newUser, oldUser);
+        userRepository.save(newUser);
+    }
+
+    @Transactional
+    public void updateByProfile(User newUser, String toBeUpdatedUserName) {
+        User oldUser = findByMail(toBeUpdatedUserName);
+        newUser.setId(oldUser.getId());
+        newUser.setRoles(oldUser.getRoles());
+        setUserPassword(newUser, oldUser);
         userRepository.save(newUser);
     }
 
     public User findByMail(String email) {
         return userRepository.findByEmailIgnoreCase(email).orElse(null);
+    }
+
+    private void setUserPassword(User newUser, User oldUser){
+        if (newUser.getPassword() == null) {
+            newUser.setPassword(oldUser.getPassword());
+        } else {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        }
     }
 }

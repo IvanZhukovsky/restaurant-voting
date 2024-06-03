@@ -75,10 +75,11 @@ public class ProfileController extends AbstractUserController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserDto userDTO, @AuthenticationPrincipal UserDetails userDetails) {
-        User oldUser = userService.findByMail(userDetails.getUsername());
+        //User oldUser = userService.findByMail(userDetails.getUsername());
+        String toBeUpdatedUserName = userDetails.getUsername();
         User newUser = UserMapper.convertToUser(userDTO);
-        log.info("update {} to {}", oldUser, newUser);
-        newUser.setId(oldUser.getId());
-        userService.update(newUser);
+        log.info("update user with {} to {}", toBeUpdatedUserName, newUser);
+        //newUser.setId(oldUser.getId());
+        userService.updateByProfile(newUser, toBeUpdatedUserName);
     }
 }

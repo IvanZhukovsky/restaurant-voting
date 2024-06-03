@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +77,7 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<Menu> create(@Valid @RequestBody Menu menu) {
         log.info("create new menu");
+        menu.setId(null);
         Menu created = menuService.create(menu);
         log.info("A menu has been created with id = {}", created.getId());
         return ResponseEntity.created(URIUtil.getCreatedUri("api/menus/{id}", created.getId())).body(created);
