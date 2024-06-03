@@ -54,6 +54,7 @@ public class AdminController extends AbstractUserController{
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@Valid @RequestBody User user) {
         log.info("create new user");
+        user.setId(null);
         User created = userService.create(user);
         log.info("A user has been created with id = {}", created.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -75,7 +76,7 @@ public class AdminController extends AbstractUserController{
 
     @Operation(
             summary = "Обновление пользователя",
-            description = "Позволяет администратору обновить информацию о зарегистрированном пользователе по его id"
+            description = "Позволяет администратору обновить информацию о зарегистрированном пользователе c данным id"
     )
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -35,23 +35,25 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
-                                        "/swagger-ui.html",
-                                        "/api/votes",
-                                        "/api/votes/*"
-
+                                        "/swagger-ui.html"
                                 ).permitAll()
                                 .requestMatchers("/api/profile/register"
                                 ).anonymous()
                                 .requestMatchers(
                                         "/api/restaurants/available",
+                                        "/api/menus/by-restaurant/available-today",
                                         "/api/profile/**",
-                                        "/api/restaurants/{id}/vote"
+                                        "/api/restaurants/{id}/vote",
+                                        "/api/votes/profile-today",
+                                        "/api/votes/profile-all",
+                                        "/api/votes"
                                 ).hasAuthority("USER")
                                 .requestMatchers(
                                         "/api/admin/users/**",
                                         "/api/restaurants/**",
-                                        "/api/dishes/**",
-                                        "/api/menus/**").hasAuthority("ADMIN")
+                                        "/api/menus/**",
+                                        "/api/votes/*"
+                                ).hasAuthority("ADMIN")
                 )
                 .httpBasic(withDefaults())
                 .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

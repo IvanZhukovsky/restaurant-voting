@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.asphaltica.restaurantvoting.MenuTestData.*;
 import static ru.asphaltica.restaurantvoting.UserTestData.ADMIN_MAIL;
+import static ru.asphaltica.restaurantvoting.UserTestData.GUEST_MAIL;
 import static ru.asphaltica.restaurantvoting.UserTestData.USER_MAIL;
 import static ru.asphaltica.restaurantvoting.controller.MenuController.REST_URL;
 import static ru.asphaltica.restaurantvoting.validation.UniqueDishesNamesValidator.*;

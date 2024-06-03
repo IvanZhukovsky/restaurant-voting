@@ -3,14 +3,11 @@ package ru.asphaltica.restaurantvoting.validation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.asphaltica.restaurantvoting.common.HasIdAndEmail;
 import ru.asphaltica.restaurantvoting.common.HasIdAndName;
-import ru.asphaltica.restaurantvoting.model.Restaurant;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 
 @Component
@@ -44,12 +41,10 @@ public class RestaurantValidator implements Validator {
                             String requestURI = request.getRequestURI();
                             if (requestURI.endsWith("/" + dbId))
                                 return;
-
                         }
                         errors.rejectValue("name", "", EXCEPTION_DUPLICATE_RESTAURANT_NAME);
                     }
             );
-
         }
     }
 }

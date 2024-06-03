@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class MenuController {
     }
 
     @Operation(
-            summary = "Получение меню",
+            summary = "Получение информации о конкретном меню",
             description = "Позволяет администратору получить меню по его id"
     )
     @GetMapping("/{id}")
@@ -103,5 +104,16 @@ public class MenuController {
     public List<MenuWithoutRestaurantDto> findAllByOwnRestaurantId(@RequestParam @NotNull int restaurantId) {
         log.info("get all menus in restaurant with id = {}", restaurantId);
         return menuService.findAllByOwnRestaurantId(restaurantId).stream().map(menuMapper::convertToWithoutRestaurantDto).toList();
+    }
+
+    @Operation(
+            summary = "Получение меню доступное сегодня в конкретном ресторане",
+            description = "Позволяет администратору получить меню, если оно доступно сегодня в ресторане с заданным id"
+    )
+    @Validated
+    @GetMapping("/by-restaurant/available-today")
+    public MenuWithoutRestaurantDto findAllByOwnRestaurantIdAvailableToday(@RequestParam @NotNull int restaurantId) {
+        log.info("get menu in restaurant with id = {}, доступное сегодня", restaurantId);
+        return menuMapper.convertToWithoutRestaurantDto(menuService.findByRestaurantIdAvailableToday(restaurantId));
     }
 }

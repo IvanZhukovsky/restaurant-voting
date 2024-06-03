@@ -16,6 +16,7 @@ public class MenuTestData {
     public static final MatcherFactory.Matcher<Menu> MENU_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "");
     public static final MatcherFactory.Matcher<Menu> MENU_MATCHER_WITHOUT_RESTAURANT = MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "ownRestaurant");
     public static final MatcherFactory.Matcher<Menu> MENU_MATCHER_WITHOUT_DISHES = MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "dishes");
+    public static final MatcherFactory.Matcher<Menu> MENU_MATCHER_WITHOUT_DATE = MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "availableDate");
 
     public static final int MENU1_ID = 1;
     public static final int MENU2_ID = 2;
@@ -76,6 +77,13 @@ public class MenuTestData {
             new Dish("конфета", new BigDecimal("72.50"))
     ));
 
+    public static Menu getUpdatedToday() {
+        return new Menu(MENU5_ID, LocalDate.of(2024, 7, 11), restaurant1,  Set.of(
+                new Dish("чай с молоком", new BigDecimal("30.10")),
+                new Dish("пирожное", new BigDecimal("7.58"))
+        ));
+    }
+
     public static final String JSON_WITH_DUPBLICATE_DISHES = "{\"id\":null,\"availableDate\":\"2024-07-11\",\"ownRestaurant\":{\"id\":1,\"name\":\"Щепка\"}," +
             "\"dishes\":[{\"name\":\"щи\",\"price\":13.20}, {\"name\":\"щи\",\"price\":13.20}, {\"name\":\"запеканка\",\"price\":9.99},{\"name\":\"чай с лимоном\",\"price\":30.60}]}";
 
@@ -85,6 +93,14 @@ public class MenuTestData {
 
     public static Menu getNew() {
         return new Menu(null, LocalDate.of(2024, 7, 13), restaurant1,  Set.of(
+                new Dish("чай с лимоном", new BigDecimal("30.60")),
+                new Dish("щи", new BigDecimal("13.20")),
+                new Dish("запеканка", new BigDecimal("9.99"))
+        ));
+    }
+
+    public static Menu getNewForToday() {
+        return new Menu(null, LocalDate.now(), restaurant1,  Set.of(
                 new Dish("чай с лимоном", new BigDecimal("30.60")),
                 new Dish("щи", new BigDecimal("13.20")),
                 new Dish("запеканка", new BigDecimal("9.99"))

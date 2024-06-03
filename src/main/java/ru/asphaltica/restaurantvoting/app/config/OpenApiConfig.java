@@ -22,7 +22,8 @@ import org.springframework.context.annotation.Configuration;
                 version = "1.0",
                 description = """
                         <p><b>Тестовые креденшелы:</b><br>
-                        - user@gmail.com / admin<br>
+                        - guest@mail.ru / admin<br>
+                        - user@gmail.com / user<br>
                         - admin@javaops.ru / admin<br>
                         """,
                 contact = @Contact(name = "Ivan Zhukovsky", email = "izhukovsky@mail.ru")

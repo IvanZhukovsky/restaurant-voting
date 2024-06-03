@@ -1,6 +1,9 @@
 package ru.asphaltica.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asphaltica.restaurantvoting.common.error.NotFoundException;
@@ -8,6 +11,7 @@ import ru.asphaltica.restaurantvoting.model.Menu;
 import ru.asphaltica.restaurantvoting.repository.MenuRepository;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -16,19 +20,21 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CacheManager cacheManager;
+
 
     public List<Menu> findAll() {
         return menuRepository.findAllWithRestaurant();
     }
 
-    //
-//    @Cacheable(value = "MenusAvailable", unless = "#result == null")
-//    public List<Menu> findAllTodayAvailable(){
-//        return menuRepository.findByCreateDateIsBetween(DateTimeUtil.atStartOfToday(), DateTimeUtil.atEndOfVoting());
-//    }
-//
     public Menu findByIdWithRestaurantAndDishes(int id) {
         return menuRepository.findByIdWithRestaurantAndDishes(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+    }
+
+    @Cacheable(value ="menu")
+    public Menu findByRestaurantIdAvailableToday(int restaurantId) {
+        return menuRepository.findByAvailableDateAndOwnRestaurantWithDishes(LocalDate.now(), restaurantId)
+                .orElseThrow(() -> new NotFoundException("At the restaurant id=" + restaurantId + " there are no menus available for today"));
     }
 
     public Menu findById(int id) {
@@ -41,20 +47,27 @@ public class MenuService {
         }
         return menuRepository.findAllByRestaurantIdWithDishes(restaurantId);
     }
+
     @Transactional
     public Menu create(Menu menu) {
         return menuRepository.save(menu);
     }
 
+    @CacheEvict(value = "menu", allEntries = true)
     @Transactional
     public void delete(int id) {
         findById(id);
         menuRepository.deleteById(id);
+
     }
 
+    @CacheEvict(value = "menu", allEntries = true)
     @Transactional
     public void update(Menu menu) {
-        menuRepository.findByIdWithRestaurantAndDishes(menu.getId());
+
+        Menu toBeUpdated = menuRepository.findByIdWithRestaurantAndDishes(menu.getId())
+                .orElseThrow(() -> new NotFoundException("Entity with id=" + menu.getId() + " not found"));
+        menu.setAvailableDate(toBeUpdated.getAvailableDate());
         menuRepository.save(menu);
     }
 }

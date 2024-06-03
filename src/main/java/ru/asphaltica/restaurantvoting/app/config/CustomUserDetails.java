@@ -52,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    public User getUser(){
+    public User getUser() {
         return this.user;
     }
 }

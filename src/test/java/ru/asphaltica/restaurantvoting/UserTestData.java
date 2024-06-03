@@ -31,7 +31,7 @@ public class UserTestData {
     }
 
     public static User getUpdated() {
-        return new User(USER_ID, USER_MAIL,"UpdatedFirstName",  "UpdatedLastName","newPass", Set.of(Role.ADMIN));
+        return new User(USER_ID, USER_MAIL,"UpdatedFirstName",  "UpdatedLastName","newPass", Set.of(Role.USER));
     }
 
     public static String jsonWithPassword(User user, String passw) {

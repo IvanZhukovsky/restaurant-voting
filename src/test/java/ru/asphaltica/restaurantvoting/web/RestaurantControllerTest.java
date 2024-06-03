@@ -7,7 +7,9 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.asphaltica.restaurantvoting.AbstractControllerTest;
+import ru.asphaltica.restaurantvoting.MenuTestData;
 import ru.asphaltica.restaurantvoting.model.Restaurant;
+import ru.asphaltica.restaurantvoting.repository.MenuRepository;
 import ru.asphaltica.restaurantvoting.repository.RestaurantRepository;
 import ru.asphaltica.restaurantvoting.util.JsonUtil;
 
@@ -18,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.asphaltica.restaurantvoting.RestaurantTestData.*;
 import static ru.asphaltica.restaurantvoting.UserTestData.ADMIN_MAIL;
+import static ru.asphaltica.restaurantvoting.UserTestData.GUEST_MAIL;
 import static ru.asphaltica.restaurantvoting.UserTestData.USER_MAIL;
 import static ru.asphaltica.restaurantvoting.controller.RestaurantController.REST_URL;
 import static ru.asphaltica.restaurantvoting.validation.RestaurantValidator.EXCEPTION_DUPLICATE_RESTAURANT_NAME;
@@ -28,6 +31,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private MenuRepository menuRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -113,6 +118,28 @@ class RestaurantControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = GUEST_MAIL)
+    void getAllTodayAvailable() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "available"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2));
+    }
+
+    @Test
+    @WithUserDetails(value = GUEST_MAIL)
+    void getAllTodayNotFound() throws Exception {
+        menuRepository.deleteById(MenuTestData.MENU5_ID);
+        menuRepository.deleteById(MenuTestData.MENU6_ID);
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "available"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+
+
+    @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
         Restaurant invalid = new Restaurant(null, null);
@@ -144,11 +171,4 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-
-
-
-
-
-
-
 }

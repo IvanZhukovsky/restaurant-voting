@@ -13,7 +13,6 @@ import ru.asphaltica.restaurantvoting.model.Restaurant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantDto extends BaseEntity implements HasIdAndName {
-
     @NotBlank
     private String name;
 }

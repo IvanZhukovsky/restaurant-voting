@@ -14,21 +14,21 @@ import ru.asphaltica.restaurantvoting.repository.VoteRepository;
 import ru.asphaltica.restaurantvoting.util.DateTimeUtil;
 
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.asphaltica.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
 import static ru.asphaltica.restaurantvoting.RestaurantTestData.RESTAURANT2_ID;
-import static ru.asphaltica.restaurantvoting.UserTestData.GUEST_MAIL;
-import static ru.asphaltica.restaurantvoting.UserTestData.USER_MAIL;
+import static ru.asphaltica.restaurantvoting.UserTestData.*;
 import static ru.asphaltica.restaurantvoting.VoteTestData.*;
 import static ru.asphaltica.restaurantvoting.controller.VoteController.REST_URL;
 
 class VoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = VoteController.REST_URL + '/';
+    private static final String REST_URL_SLASH_VOTING_TODAY = REST_URL_SLASH + "profile-today";
+    private static final String REST_URL_SLASH_VOTING_ALL = REST_URL_SLASH + "profile-all";
 
     @Autowired
     private VoteRepository repository;
@@ -36,13 +36,33 @@ class VoteControllerTest extends AbstractControllerTest {
     private DateTimeUtil dateTimeUtil;
 
     @Test
-    @WithUserDetails(value = GUEST_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + VOTE1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(VOTE_MATCHER.contentJson(voteGuestRestaurant1));
+    }
+
+    @Test
+    @WithUserDetails(value = GUEST_MAIL)
+    void getMyVotingToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH_VOTING_TODAY))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VOTE_MATCHER.contentJson(voteGuestRestaurantNew));
+    }
+
+    @Test
+    @WithUserDetails(value = GUEST_MAIL)
+    void getMyVotingAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH_VOTING_ALL))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VOTE_MATCHER.contentJson(voteGuestRestaurant1, voteGuestRestaurantNew));
     }
 
     @Test
@@ -88,5 +108,4 @@ class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-
 }

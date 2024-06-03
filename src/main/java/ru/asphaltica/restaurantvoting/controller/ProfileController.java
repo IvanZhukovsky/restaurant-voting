@@ -79,7 +79,6 @@ public class ProfileController extends AbstractUserController {
         User newUser = UserMapper.convertToUser(userDTO);
         log.info("update {} to {}", oldUser, newUser);
         newUser.setId(oldUser.getId());
-        newUser.setRoles(oldUser.getRoles());
         userService.update(newUser);
     }
 }

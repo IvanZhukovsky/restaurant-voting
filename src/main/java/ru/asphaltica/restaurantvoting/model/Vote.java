@@ -1,7 +1,6 @@
 package ru.asphaltica.restaurantvoting.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,13 +31,14 @@ public class Vote extends BaseEntity implements HasId {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+    @JoinColumn(name = "menu_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Menu menu;
 
-    public Vote(Integer id, LocalDate createdAt, User user, Restaurant restaurant) {
+    public Vote(Integer id, LocalDate createdAt, User user, Menu menu) {
         super(id);
         this.createdAt = createdAt;
         this.user = user;
-        this.restaurant = restaurant;
+        this.menu = menu;
     }
 }

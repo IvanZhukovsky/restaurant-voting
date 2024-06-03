@@ -1,6 +1,5 @@
 package ru.asphaltica.restaurantvoting.util;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 

@@ -51,7 +51,7 @@ public class UserService {
     @Transactional
     public void update(User newUser) {
         User oldUser = findById(newUser.getId());
-
+        newUser.setRoles(oldUser.getRoles());
         if (newUser.getPassword() == null) {
             newUser.setPassword(oldUser.getPassword());
         } else {
@@ -63,6 +63,4 @@ public class UserService {
     public User findByMail(String email) {
         return userRepository.findByEmailIgnoreCase(email).orElse(null);
     }
-
-
 }

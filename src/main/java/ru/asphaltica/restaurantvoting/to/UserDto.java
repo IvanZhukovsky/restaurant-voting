@@ -33,9 +33,7 @@ public class UserDto extends BaseEntity implements HasIdAndEmail {
 
 
     @Size(max = 256, message = "length should not exceed 256 characters")
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private Set<Role> roles = EnumSet.noneOf(Role.class);
-
+    private Set<Role> roles;
 }
